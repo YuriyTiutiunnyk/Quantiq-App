@@ -7,57 +7,51 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex justify-center bg-gray-100 dark:bg-neutral-900">
+    <div className="min-h-screen bg-neutral-100 dark:bg-neutral-900 flex justify-center text-foreground font-sans">
       {/* Mobile Container Simulator */}
-      <div className="w-full max-w-md bg-background min-h-screen shadow-2xl overflow-hidden relative flex flex-col">
+      <div className="w-full max-w-md bg-background min-h-screen shadow-2xl overflow-hidden relative flex flex-col border-x border-outline-variant/20">
         
         {/* Status Bar Shim */}
-        <div className="h-8 bg-surface-container/50 w-full shrink-0" />
+        <div className="h-8 bg-surface w-full shrink-0 flex items-center justify-end px-4 gap-2">
+            <div className="w-4 h-4 rounded-full bg-current opacity-20"></div>
+            <div className="w-4 h-4 rounded-full bg-current opacity-20"></div>
+        </div>
 
         {/* Main Content Area */}
         <main className="flex-1 overflow-y-auto pb-20 scrollbar-hide">
           {children}
         </main>
 
-        {/* Bottom Navigation */}
-        <nav className="h-20 bg-surface-container border-t border-outline-variant flex items-center justify-around px-4 pb-2 shrink-0 z-50">
-          <Link href="/" className={cn(
-              "flex flex-col items-center justify-center w-16 h-full gap-1 transition-colors cursor-pointer",
-              location === "/" ? "text-primary" : "text-outline"
-            )}>
+        {/* M3 Navigation Bar */}
+        <nav className="h-20 bg-surface-container border-t border-outline-variant flex items-center justify-around px-4 pb-4 shrink-0 z-50">
+          <Link href="/" className="group flex flex-col items-center gap-1 w-16 cursor-pointer">
               <div className={cn(
-                "px-5 py-1 rounded-full transition-colors",
-                location === "/" ? "bg-primary/20" : "bg-transparent"
+                "px-5 py-1 rounded-full transition-all duration-300",
+                location === "/" ? "bg-primary text-primary-foreground" : "text-on-surface-variant group-hover:bg-surface-variant"
               )}>
                 <LayoutGrid size={24} strokeWidth={location === "/" ? 2.5 : 2} />
               </div>
-              <span className="text-xs font-medium">Counters</span>
+              <span className={cn("text-xs font-medium transition-colors", location === "/" ? "text-on-surface" : "text-on-surface-variant")}>Counters</span>
           </Link>
 
-          <Link href="/widget" className={cn(
-              "flex flex-col items-center justify-center w-16 h-full gap-1 transition-colors cursor-pointer",
-              location === "/widget" ? "text-primary" : "text-outline"
-            )}>
+          <Link href="/widget" className="group flex flex-col items-center gap-1 w-16 cursor-pointer">
               <div className={cn(
-                "px-5 py-1 rounded-full transition-colors",
-                location === "/widget" ? "bg-primary/20" : "bg-transparent"
+                "px-5 py-1 rounded-full transition-all duration-300",
+                location === "/widget" ? "bg-primary text-primary-foreground" : "text-on-surface-variant group-hover:bg-surface-variant"
               )}>
                 <Smartphone size={24} strokeWidth={location === "/widget" ? 2.5 : 2} />
               </div>
-              <span className="text-xs font-medium">Widget</span>
+              <span className={cn("text-xs font-medium transition-colors", location === "/widget" ? "text-on-surface" : "text-on-surface-variant")}>Widget</span>
           </Link>
 
-          <Link href="/settings" className={cn(
-              "flex flex-col items-center justify-center w-16 h-full gap-1 transition-colors cursor-pointer",
-              location === "/settings" ? "text-primary" : "text-outline"
-            )}>
+          <Link href="/settings" className="group flex flex-col items-center gap-1 w-16 cursor-pointer">
               <div className={cn(
-                "px-5 py-1 rounded-full transition-colors",
-                location === "/settings" ? "bg-primary/20" : "bg-transparent"
+                "px-5 py-1 rounded-full transition-all duration-300",
+                location === "/settings" ? "bg-primary text-primary-foreground" : "text-on-surface-variant group-hover:bg-surface-variant"
               )}>
                 <Settings size={24} strokeWidth={location === "/settings" ? 2.5 : 2} />
               </div>
-              <span className="text-xs font-medium">Settings</span>
+              <span className={cn("text-xs font-medium transition-colors", location === "/settings" ? "text-on-surface" : "text-on-surface-variant")}>Settings</span>
           </Link>
         </nav>
       </div>
