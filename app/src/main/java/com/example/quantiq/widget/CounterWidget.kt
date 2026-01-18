@@ -25,6 +25,7 @@ import androidx.glance.layout.width
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import com.example.quantiq.R
 import androidx.glance.Button
 import androidx.glance.currentState
 import androidx.glance.state.GlanceStateDefinition
@@ -61,12 +62,12 @@ class CounterWidget : GlanceAppWidget() {
         Column(
             modifier = GlanceModifier
                 .fillMaxSize()
-                .background(ColorProvider(day = android.graphics.Color.WHITE, night = android.graphics.Color.DKGRAY))
+                .background(ColorProvider(R.color.widget_background))
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = title, style = TextStyle(color = ColorProvider(android.graphics.Color.BLACK)))
+            Text(text = title, style = TextStyle(color = ColorProvider(R.color.widget_text)))
             
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Button(
