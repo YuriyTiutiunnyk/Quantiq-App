@@ -1,13 +1,35 @@
 import { useStore } from "@/lib/store";
-import { Crown, Moon, Sun, Monitor, Smartphone, Check, X } from "lucide-react";
+import { Crown, Moon, Sun, Check, FileJson, Upload, Download } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 
 export default function SettingsPage() {
   const { isPro, togglePro, theme, toggleTheme } = useStore();
 
+  const handleExport = () => {
+    if (!isPro) {
+        alert("Export is a PRO feature");
+        return;
+    }
+    const data = JSON.stringify(localStorage.getItem('quantiq-storage'));
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `quantiq-backup-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+  };
+
+  const handleImport = () => {
+     if (!isPro) {
+        alert("Import is a PRO feature");
+        return;
+    }
+    document.getElementById('import-file')?.click();
+  };
+
   return (
-    <div className="p-6 space-y-8">
+    <div className="p-6 space-y-8 pb-24">
       <div>
         <h1 className="text-3xl font-normal mb-6">Settings</h1>
         
@@ -21,6 +43,45 @@ export default function SettingsPage() {
                 <span>Dark Mode</span>
               </div>
               <Switch checked={theme === 'dark'} onCheckedChange={toggleTheme} />
+            </div>
+          </section>
+
+          {/* Data Management Section (New) */}
+          <section className="space-y-4">
+            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Data</h3>
+            <div className="bg-surface-container rounded-xl p-2 space-y-1">
+               <button 
+                onClick={handleExport}
+                className="w-full flex items-center gap-3 p-3 hover:bg-surface-variant rounded-lg transition-colors text-left disabled:opacity-50"
+                disabled={!isPro}
+               >
+                 <Download size={20} className="text-primary" />
+                 <div className="flex-1">
+                   <div className="font-medium flex items-center gap-2">
+                     Export Backup
+                     {!isPro && <Crown size={12} className="text-muted-foreground" />}
+                   </div>
+                   <p className="text-xs text-muted-foreground">Save your counters to a JSON file</p>
+                 </div>
+               </button>
+
+               <div className="h-px bg-outline-variant/50 mx-4" />
+
+               <button 
+                onClick={handleImport}
+                className="w-full flex items-center gap-3 p-3 hover:bg-surface-variant rounded-lg transition-colors text-left disabled:opacity-50"
+                disabled={!isPro}
+               >
+                 <Upload size={20} className="text-primary" />
+                 <div className="flex-1">
+                   <div className="font-medium flex items-center gap-2">
+                     Import Backup
+                     {!isPro && <Crown size={12} className="text-muted-foreground" />}
+                   </div>
+                   <p className="text-xs text-muted-foreground">Restore from a JSON file</p>
+                 </div>
+               </button>
+               <input type="file" id="import-file" className="hidden" accept=".json" />
             </div>
           </section>
 
@@ -44,9 +105,9 @@ export default function SettingsPage() {
 
               <div className="space-y-2 mb-6">
                 <FeatureRow active={isPro} text="Unlimited Counters" />
+                <FeatureRow active={isPro} text="JSON Import/Export" />
                 <FeatureRow active={isPro} text="Multiple Widgets" />
                 <FeatureRow active={isPro} text="Cloud Sync (Soon)" />
-                <FeatureRow active={isPro} text="Custom Themes" />
               </div>
 
               <Button 

@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Quantiq</string>
+    <string name="add_counter">Додати лічильник</string>
+    <string name="edit_counter">Редагувати</string>
+    <string name="settings">Налаштування</string>
+    <string name="pro_upgrade">Оновити до PRO</string>
+    <string name="free_limit_reached">Ліміт безкоштовної версії (3/3)</string>
+    <string name="export_data">Експорт</string>
+    <string name="import_data">Імпорт</string>
+    <string name="delete">Видалити</string>
+    <string name="cancel">Скасувати</string>
+    <string name="create">Створити</string>
+    <string name="theme_dark">Темна тема</string>
+</resources>

@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Quantiq</string>
+    <string name="add_counter">اضافة عداد</string>
+    <string name="edit_counter">تعديل العداد</string>
+    <string name="settings">الإعدادات</string>
+    <string name="pro_upgrade">الترقية الى PRO</string>
+    <string name="free_limit_reached">تم الوصول للحد المجاني (3/3)</string>
+    <string name="export_data">تصدير البيانات</string>
+    <string name="import_data">استيراد البيانات</string>
+    <string name="delete">حذف</string>
+    <string name="cancel">الغاء</string>
+    <string name="create">إنشاء</string>
+    <string name="theme_dark">الوضع الداكن</string>
+</resources>

@@ -12,6 +12,7 @@ import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.provideContent
+import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
@@ -24,20 +25,32 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import androidx.glance.Button
-import androidx.glance.material3.ColorProviders
+import androidx.glance.currentState
+import androidx.glance.state.GlanceStateDefinition
+import androidx.glance.state.PreferencesGlanceStateDefinition
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.quantiq.ui.theme.QuantiqTheme
 
-// Simple Widget Skeleton using Jetpack Glance
+// Keys for storing widget state
+object WidgetKeys {
+    val counterId = intPreferencesKey("counter_id")
+    val counterTitle = stringPreferencesKey("counter_title")
+    val counterValue = intPreferencesKey("counter_value")
+}
+
 class CounterWidget : GlanceAppWidget() {
     
-    override suspend fun provideGlance(context: Context, id: GlanceId) {
-        // In real app, fetch data from DataStore/Room here
-        val mockValue = 42
-        val mockTitle = "Pushups"
+    override val stateDefinition: GlanceStateDefinition<*> = PreferencesGlanceStateDefinition
 
+    override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
+            val prefs = currentState<androidx.datastore.preferences.core.Preferences>()
+            val title = prefs[WidgetKeys.counterTitle] ?: "Select Counter"
+            val value = prefs[WidgetKeys.counterValue] ?: 0
+            
             QuantiqTheme {
-                WidgetContent(mockTitle, mockValue)
+                WidgetContent(title, value)
             }
         }
     }
@@ -57,7 +70,9 @@ class CounterWidget : GlanceAppWidget() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Button(
                     text = "-",
-                    onClick = actionRunCallback<DecrementAction>()
+                    onClick = actionRunCallback<WidgetAction>(
+                        actionParametersOf(WidgetAction.ActionKey to WidgetAction.DECREMENT)
+                    )
                 )
                 Spacer(modifier = GlanceModifier.width(16.dp))
                 Text(
@@ -67,25 +82,41 @@ class CounterWidget : GlanceAppWidget() {
                 Spacer(modifier = GlanceModifier.width(16.dp))
                 Button(
                     text = "+",
-                    onClick = actionRunCallback<IncrementAction>()
+                    onClick = actionRunCallback<WidgetAction>(
+                        actionParametersOf(WidgetAction.ActionKey to WidgetAction.INCREMENT)
+                    )
                 )
             }
         }
     }
 }
 
-class CounterWidgetReceiver : GlanceAppWidgetReceiver() {
-    override val glanceAppWidget: GlanceAppWidget = CounterWidget()
-}
-
-class IncrementAction : ActionCallback {
-    override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
-        // Update database + refresh widget
+class WidgetAction : ActionCallback {
+    companion object {
+        const val INCREMENT = "increment"
+        const val DECREMENT = "decrement"
+        val ActionKey = ActionParameters.Key<String>("action")
     }
-}
 
-class DecrementAction : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
-        // Update database + refresh widget
+        val action = parameters[ActionKey]
+        
+        // 1. Get current Widget State
+        // 2. Update Room Database via Repository
+        // 3. Update Widget State with new value
+        // 4. Trigger update
+        
+        val widgetId = GlanceAppWidgetManager(context).getAppWidgetId(glanceId)
+        updateAppWidgetState(context, glanceId) { prefs ->
+             // Logic to update shared prefs or sync with Room would go here
+             // For this skeleton, we just mock the update locally in prefs
+             val current = prefs[WidgetKeys.counterValue] ?: 0
+             if (action == INCREMENT) {
+                 prefs[WidgetKeys.counterValue] = current + 1
+             } else {
+                 prefs[WidgetKeys.counterValue] = current - 1
+             }
+        }
+        CounterWidget().update(context, glanceId)
     }
 }

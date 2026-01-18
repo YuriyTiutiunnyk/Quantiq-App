@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Quantiq</string>
+    <string name="add_counter">Add Counter</string>
+    <string name="edit_counter">Edit Counter</string>
+    <string name="settings">Settings</string>
+    <string name="pro_upgrade">Upgrade to PRO</string>
+    <string name="free_limit_reached">Free limit reached (3/3)</string>
+    <string name="export_data">Export Data</string>
+    <string name="import_data">Import Data</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="create">Create</string>
+    <string name="theme_dark">Dark Mode</string>
+</resources>

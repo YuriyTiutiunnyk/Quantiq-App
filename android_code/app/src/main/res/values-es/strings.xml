@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Quantiq</string>
+    <string name="add_counter">Añadir Contador</string>
+    <string name="edit_counter">Editar Contador</string>
+    <string name="settings">Ajustes</string>
+    <string name="pro_upgrade">Mejorar a PRO</string>
+    <string name="free_limit_reached">Límite gratuito alcanzado (3/3)</string>
+    <string name="export_data">Exportar Datos</string>
+    <string name="import_data">Importar Datos</string>
+    <string name="delete">Eliminar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="create">Crear</string>
+    <string name="theme_dark">Modo Oscuro</string>
+</resources>
