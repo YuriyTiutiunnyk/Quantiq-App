@@ -9,7 +9,7 @@ import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Entity(tableName = "counters")
-data class Counter(
+data class CounterEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val title: String,
     val value: Int = 0,
@@ -20,16 +20,19 @@ data class Counter(
 @Dao
 interface CounterDao {
     @Query("SELECT * FROM counters ORDER BY id DESC")
-    fun getAllCounters(): Flow<List<Counter>>
+    fun getAllCounters(): Flow<List<CounterEntity>>
 
     @Query("SELECT * FROM counters WHERE id = :id")
-    suspend fun getCounterById(id: Long): Counter?
+    fun observeCounterById(id: Long): Flow<CounterEntity?>
+
+    @Query("SELECT * FROM counters WHERE id = :id")
+    suspend fun getCounterById(id: Long): CounterEntity?
 
     @Insert
-    suspend fun insert(counter: Counter)
+    suspend fun insert(counter: CounterEntity)
 
     @Update
-    suspend fun update(counter: Counter)
+    suspend fun update(counter: CounterEntity)
 
     @Query("DELETE FROM counters WHERE id = :id")
     suspend fun deleteById(id: Long)

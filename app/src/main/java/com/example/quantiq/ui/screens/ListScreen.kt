@@ -1,7 +1,13 @@
 package com.example.quantiq.ui.screens
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -12,18 +18,20 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.quantiq.ui.CounterViewModel
+import com.example.quantiq.domain.model.Counter
+import com.example.quantiq.ui.MainIntent
+import com.example.quantiq.ui.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListScreen(
-    viewModel: CounterViewModel,
+    viewModel: MainViewModel,
     navController: NavController
 ) {
-    val counters by viewModel.counters.collectAsState()
-    val isPro by viewModel.isPro.collectAsState()
+    val state by viewModel.state.collectAsState()
     var showDialog by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -32,14 +40,14 @@ fun ListScreen(
                 title = { Text("Quantiq") },
                 actions = {
                     // Counter count badge
-                    Badge { Text(counters.size.toString()) }
+                    Badge { Text(state.counters.size.toString()) }
                     Spacer(modifier = Modifier.width(16.dp))
                 }
             )
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                if (!isPro && counters.size >= 3) {
+                if (!state.isPro && state.counters.size >= 3) {
                     // Show Limit Snackbar or Navigate to PRO
                     navController.navigate("settings")
                 } else {
@@ -54,14 +62,14 @@ fun ListScreen(
             modifier = Modifier.padding(padding).padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(counters) { counter ->
+            items(state.counters) { counter ->
                 CounterItem(counter = counter, onClick = {
                     navController.navigate("details/${counter.id}")
                 })
             }
             
             // Placeholder for locked item
-            if (!isPro && counters.size >= 3) {
+            if (!state.isPro && state.counters.size >= 3) {
                 item {
                     LockedItem(onClick = { navController.navigate("settings") })
                 }
@@ -73,7 +81,7 @@ fun ListScreen(
         AddCounterDialog(
             onDismiss = { showDialog = false },
             onConfirm = { title ->
-                viewModel.addCounter(title)
+                viewModel.dispatch(MainIntent.AddCounter(title))
                 showDialog = false
             }
         )
@@ -81,7 +89,7 @@ fun ListScreen(
 }
 
 @Composable
-fun CounterItem(counter: com.example.quantiq.data.Counter, onClick: () -> Unit) {
+fun CounterItem(counter: Counter, onClick: () -> Unit) {
     Card(
         onClick = onClick,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
