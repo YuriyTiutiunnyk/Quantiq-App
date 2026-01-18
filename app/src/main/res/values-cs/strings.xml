@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Quantiq</string>
+    <string name="add_counter">Přidat čítač</string>
+    <string name="edit_counter">Upravit čítač</string>
+    <string name="settings">Nastavení</string>
+    <string name="pro_upgrade">Upgradovat na PRO</string>
+    <string name="free_limit_reached">Dosažen bezplatný limit (3/3)</string>
+    <string name="export_data">Exportovat data</string>
+    <string name="import_data">Importovat data</string>
+    <string name="delete">Smazat</string>
+    <string name="cancel">Zrušit</string>
+    <string name="create">Vytvořit</string>
+    <string name="theme_dark">Tmavý režim</string>
+    <string name="counter_step_format">Krok: %1$d</string>
+    <string name="new_counter_title">Nový čítač</string>
+    <string name="counter_name_label">Název</string>
+    <string name="new_counter_default">Nový čítač</string>
+    <string name="reset">Resetovat</string>
+    <string name="back">Zpět</string>
+    <string name="edit">Upravit</string>
+    <string name="language">Jazyk</string>
+    <string name="select_language">Vyberte jazyk</string>
+    <string name="language_current_format">Aktuální: %1$s</string>
+    <string name="language_english">Angličtina</string>
+    <string name="language_spanish">Španělština</string>
+    <string name="language_german">Němčina</string>
+    <string name="language_italian">Italština</string>
+    <string name="language_french">Francouzština</string>
+    <string name="language_czech">Čeština</string>
+    <string name="language_ukrainian">Ukrajinština</string>
+    <string name="language_hindi">Hindština</string>
+    <string name="language_portuguese">Portugalština</string>
+    <string name="language_arabic">Arabština</string>
+</resources>

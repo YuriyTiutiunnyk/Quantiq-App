@@ -11,4 +11,24 @@
     <string name="cancel">Cancelar</string>
     <string name="create">Crear</string>
     <string name="theme_dark">Modo Oscuro</string>
+    <string name="counter_step_format">Paso: %1$d</string>
+    <string name="new_counter_title">Nuevo Contador</string>
+    <string name="counter_name_label">Nombre</string>
+    <string name="new_counter_default">Nuevo Contador</string>
+    <string name="reset">Restablecer</string>
+    <string name="back">Atrás</string>
+    <string name="edit">Editar</string>
+    <string name="language">Idioma</string>
+    <string name="select_language">Seleccionar idioma</string>
+    <string name="language_current_format">Actual: %1$s</string>
+    <string name="language_english">Inglés</string>
+    <string name="language_spanish">Español</string>
+    <string name="language_german">Alemán</string>
+    <string name="language_italian">Italiano</string>
+    <string name="language_french">Francés</string>
+    <string name="language_czech">Checo</string>
+    <string name="language_ukrainian">Ucraniano</string>
+    <string name="language_hindi">Hindi</string>
+    <string name="language_portuguese">Portugués</string>
+    <string name="language_arabic">Árabe</string>
 </resources>

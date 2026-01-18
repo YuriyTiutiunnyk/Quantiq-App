@@ -17,8 +17,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.quantiq.R
 import com.example.quantiq.ui.MainIntent
 import com.example.quantiq.ui.MainViewModel
 
@@ -44,12 +46,18 @@ fun DetailScreen(
                 title = { Text(counter.title) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
                     }
                 },
                 actions = {
                     IconButton(onClick = { /* Open Edit Dialog */ }) {
-                        Icon(Icons.Default.Settings, contentDescription = "Edit")
+                        Icon(
+                            Icons.Default.Settings,
+                            contentDescription = stringResource(R.string.edit)
+                        )
                     }
                 }
             )
@@ -95,7 +103,7 @@ fun DetailScreen(
             TextButton(onClick = { viewModel.dispatch(MainIntent.ResetCounter(counter.id)) }) {
                 Icon(Icons.Default.Refresh, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Reset")
+                Text(stringResource(R.string.reset))
             }
         }
     }

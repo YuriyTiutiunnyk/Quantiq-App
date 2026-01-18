@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Quantiq</string>
+    <string name="add_counter">Adicionar contador</string>
+    <string name="edit_counter">Editar contador</string>
+    <string name="settings">Configurações</string>
+    <string name="pro_upgrade">Atualizar para PRO</string>
+    <string name="free_limit_reached">Limite gratuito atingido (3/3)</string>
+    <string name="export_data">Exportar dados</string>
+    <string name="import_data">Importar dados</string>
+    <string name="delete">Excluir</string>
+    <string name="cancel">Cancelar</string>
+    <string name="create">Criar</string>
+    <string name="theme_dark">Modo escuro</string>
+    <string name="counter_step_format">Passo: %1$d</string>
+    <string name="new_counter_title">Novo contador</string>
+    <string name="counter_name_label">Nome</string>
+    <string name="new_counter_default">Novo contador</string>
+    <string name="reset">Redefinir</string>
+    <string name="back">Voltar</string>
+    <string name="edit">Editar</string>
+    <string name="language">Idioma</string>
+    <string name="select_language">Selecionar idioma</string>
+    <string name="language_current_format">Atual: %1$s</string>
+    <string name="language_english">Inglês</string>
+    <string name="language_spanish">Espanhol</string>
+    <string name="language_german">Alemão</string>
+    <string name="language_italian">Italiano</string>
+    <string name="language_french">Francês</string>
+    <string name="language_czech">Tcheco</string>
+    <string name="language_ukrainian">Ucraniano</string>
+    <string name="language_hindi">Hindi</string>
+    <string name="language_portuguese">Português</string>
+    <string name="language_arabic">Árabe</string>
+</resources>
