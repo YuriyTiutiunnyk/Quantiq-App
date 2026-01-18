@@ -1,6 +1,14 @@
 package com.example.quantiq.ui.screens
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
@@ -11,18 +19,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.quantiq.ui.CounterViewModel
+import com.example.quantiq.ui.MainIntent
+import com.example.quantiq.ui.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
     counterId: Long,
-    viewModel: CounterViewModel,
+    viewModel: MainViewModel,
     navController: NavController
 ) {
     // In real app, collect specific counter flow
-    val counters by viewModel.counters.collectAsState()
-    val counter = counters.find { it.id == counterId }
+    val state by viewModel.state.collectAsState()
+    val counter = state.counters.find { it.id == counterId }
 
     if (counter == null) {
         // Handle loading or not found
@@ -65,7 +74,7 @@ fun DetailScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 FilledTonalButton(
-                    onClick = { viewModel.decrement(counter) },
+                    onClick = { viewModel.dispatch(MainIntent.UpdateCounterValue(counter, -counter.step)) },
                     modifier = Modifier.size(80.dp),
                     shape = MaterialTheme.shapes.large
                 ) {
@@ -73,7 +82,7 @@ fun DetailScreen(
                 }
                 
                 Button(
-                    onClick = { viewModel.increment(counter) },
+                    onClick = { viewModel.dispatch(MainIntent.UpdateCounterValue(counter, counter.step)) },
                     modifier = Modifier.size(96.dp),
                     shape = MaterialTheme.shapes.large
                 ) {
@@ -83,7 +92,7 @@ fun DetailScreen(
             
             Spacer(modifier = Modifier.height(48.dp))
             
-            TextButton(onClick = { viewModel.reset(counter) }) {
+            TextButton(onClick = { viewModel.dispatch(MainIntent.ResetCounter(counter.id)) }) {
                 Icon(Icons.Default.Refresh, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Reset")

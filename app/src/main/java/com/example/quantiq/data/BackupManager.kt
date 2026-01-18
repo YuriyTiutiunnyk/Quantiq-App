@@ -2,9 +2,9 @@ package com.example.quantiq.data
 
 import android.content.Context
 import android.net.Uri
+import com.example.quantiq.domain.model.Counter
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader

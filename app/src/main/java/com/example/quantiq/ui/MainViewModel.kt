@@ -3,8 +3,13 @@ package com.example.quantiq.ui
 import androidx.lifecycle.viewModelScope
 import com.example.quantiq.billing.BillingManager
 import com.example.quantiq.data.BackupManager
-import com.example.quantiq.data.Counter
-import com.example.quantiq.data.CounterDao
+import com.example.quantiq.domain.model.Counter
+import com.example.quantiq.domain.usecase.AddCounterUseCase
+import com.example.quantiq.domain.usecase.DeleteCounterUseCase
+import com.example.quantiq.domain.usecase.ObserveCountersUseCase
+import com.example.quantiq.domain.usecase.ResetCounterUseCase
+import com.example.quantiq.domain.usecase.UpdateCounterDetailsUseCase
+import com.example.quantiq.domain.usecase.UpdateCounterValueUseCase
 import com.example.quantiq.mvi.MviViewModel
 import com.example.quantiq.mvi.UiEffect
 import com.example.quantiq.mvi.UiIntent
@@ -20,9 +25,11 @@ data class MainState(
 
 sealed class MainIntent : UiIntent {
     data class LoadCounters(val forceRefresh: Boolean = false) : MainIntent()
-    data class AddCounter(val title: String) : MainIntent()
-    data class UpdateCounter(val counter: Counter, val delta: Int) : MainIntent() // Unified increment/decrement
+    data class AddCounter(val title: String, val step: Int = 1) : MainIntent()
+    data class UpdateCounterValue(val counter: Counter, val delta: Int) : MainIntent()
+    data class UpdateCounterDetails(val counter: Counter, val title: String, val step: Int) : MainIntent()
     data class DeleteCounter(val id: Long) : MainIntent()
+    data class ResetCounter(val id: Long) : MainIntent()
     object PurchasePro : MainIntent()
     data class ExportData(val uri: android.net.Uri) : MainIntent()
     data class ImportData(val uri: android.net.Uri) : MainIntent()
@@ -35,14 +42,19 @@ sealed class MainEffect : UiEffect {
 }
 
 class MainViewModel(
-    private val dao: CounterDao,
+    private val observeCountersUseCase: ObserveCountersUseCase,
+    private val addCounterUseCase: AddCounterUseCase,
+    private val updateCounterValueUseCase: UpdateCounterValueUseCase,
+    private val updateCounterDetailsUseCase: UpdateCounterDetailsUseCase,
+    private val deleteCounterUseCase: DeleteCounterUseCase,
+    private val resetCounterUseCase: ResetCounterUseCase,
     private val billingManager: BillingManager,
     private val backupManager: BackupManager
 ) : MviViewModel<MainState, MainIntent, MainEffect>(MainState()) {
 
     init {
         viewModelScope.launch {
-            dao.getAllCounters().collect { counters ->
+            observeCountersUseCase().collect { counters ->
                 setState { copy(counters = counters) }
             }
         }
@@ -64,20 +76,31 @@ class MainViewModel(
                     return
                 }
                 viewModelScope.launch {
-                    dao.insert(Counter(title = intent.title))
+                    addCounterUseCase(intent.title, intent.step)
                 }
             }
             
-            is MainIntent.UpdateCounter -> {
+            is MainIntent.UpdateCounterValue -> {
                 viewModelScope.launch {
-                    val newValue = intent.counter.value + intent.delta
-                    dao.update(intent.counter.copy(value = newValue))
+                    updateCounterValueUseCase(intent.counter, intent.delta)
+                }
+            }
+            
+            is MainIntent.UpdateCounterDetails -> {
+                viewModelScope.launch {
+                    updateCounterDetailsUseCase(intent.counter, intent.title, intent.step)
                 }
             }
             
             is MainIntent.DeleteCounter -> {
                 viewModelScope.launch {
-                    dao.deleteById(intent.id)
+                    deleteCounterUseCase(intent.id)
+                }
+            }
+            
+            is MainIntent.ResetCounter -> {
+                viewModelScope.launch {
+                    resetCounterUseCase(intent.id)
                 }
             }
             
@@ -98,7 +121,9 @@ class MainViewModel(
                     backupManager.importData(intent.uri)
                         .onSuccess { counters ->
                             // Merge strategy: Add as new
-                            counters.forEach { dao.insert(it.copy(id = 0)) }
+                            counters.forEach { counter ->
+                                addCounterUseCase(counter.title, counter.step, counter.value)
+                            }
                             setEffect { MainEffect.ShowToast("Imported ${counters.size} counters") }
                         }
                         .onFailure { setEffect { MainEffect.ShowToast("Import Failed: ${it.message}") } }
