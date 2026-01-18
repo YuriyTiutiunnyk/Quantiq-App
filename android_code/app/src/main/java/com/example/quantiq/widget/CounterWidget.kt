@@ -3,6 +3,7 @@ package com.example.quantiq.widget
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.action.ActionParameters
@@ -91,6 +92,10 @@ class CounterWidget : GlanceAppWidget() {
     }
 }
 
+class CounterWidgetReceiver : GlanceAppWidgetReceiver() {
+    override val glanceAppWidget: GlanceAppWidget = CounterWidget()
+}
+
 class WidgetAction : ActionCallback {
     companion object {
         const val INCREMENT = "increment"
@@ -106,7 +111,6 @@ class WidgetAction : ActionCallback {
         // 3. Update Widget State with new value
         // 4. Trigger update
         
-        val widgetId = GlanceAppWidgetManager(context).getAppWidgetId(glanceId)
         updateAppWidgetState(context, glanceId) { prefs ->
              // Logic to update shared prefs or sync with Room would go here
              // For this skeleton, we just mock the update locally in prefs
