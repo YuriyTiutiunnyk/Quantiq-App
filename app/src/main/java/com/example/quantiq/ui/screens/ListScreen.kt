@@ -19,8 +19,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.quantiq.R
 import com.example.quantiq.domain.model.Counter
 import com.example.quantiq.ui.MainIntent
 import com.example.quantiq.ui.MainViewModel
@@ -37,7 +39,7 @@ fun ListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Quantiq") },
+                title = { Text(stringResource(R.string.app_name)) },
                 actions = {
                     // Counter count badge
                     Badge { Text(state.counters.size.toString()) }
@@ -54,7 +56,7 @@ fun ListScreen(
                     showDialog = true
                 }
             }) {
-                Icon(Icons.Default.Add, contentDescription = "Add Counter")
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_counter))
             }
         }
     ) { padding ->
@@ -101,7 +103,11 @@ fun CounterItem(counter: Counter, onClick: () -> Unit) {
         ) {
             Column {
                 Text(text = counter.title, style = MaterialTheme.typography.titleMedium)
-                Text(text = "Step: ${counter.step}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(
+                    text = stringResource(R.string.counter_step_format, counter.step),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
@@ -129,7 +135,7 @@ fun LockedItem(onClick: () -> Unit) {
         ) {
             Icon(Icons.Default.Lock, contentDescription = null)
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Free limit reached (3/3)")
+            Text(stringResource(R.string.free_limit_reached))
         }
     }
 }
@@ -139,21 +145,22 @@ fun AddCounterDialog(onDismiss: () -> Unit, onConfirm: (String) -> Unit) {
     var text by remember { mutableStateOf("") }
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("New Counter") },
+        title = { Text(stringResource(R.string.new_counter_title)) },
         text = { 
             OutlinedTextField(
                 value = text, 
                 onValueChange = { text = it },
-                label = { Text("Name") }
+                label = { Text(stringResource(R.string.counter_name_label)) }
             ) 
         },
         confirmButton = {
-            TextButton(onClick = { onConfirm(text.ifBlank { "New Counter" }) }) {
-                Text("Create")
+            val defaultTitle = stringResource(R.string.new_counter_default)
+            TextButton(onClick = { onConfirm(text.ifBlank { defaultTitle }) }) {
+                Text(stringResource(R.string.create))
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
         }
     )
 }

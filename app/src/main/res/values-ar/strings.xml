@@ -11,4 +11,24 @@
     <string name="cancel">الغاء</string>
     <string name="create">إنشاء</string>
     <string name="theme_dark">الوضع الداكن</string>
+    <string name="counter_step_format">الخطوة: %1$d</string>
+    <string name="new_counter_title">عداد جديد</string>
+    <string name="counter_name_label">الاسم</string>
+    <string name="new_counter_default">عداد جديد</string>
+    <string name="reset">إعادة ضبط</string>
+    <string name="back">رجوع</string>
+    <string name="edit">تعديل</string>
+    <string name="language">اللغة</string>
+    <string name="select_language">اختر اللغة</string>
+    <string name="language_current_format">الحالية: %1$s</string>
+    <string name="language_english">الإنجليزية</string>
+    <string name="language_spanish">الإسبانية</string>
+    <string name="language_german">الألمانية</string>
+    <string name="language_italian">الإيطالية</string>
+    <string name="language_french">الفرنسية</string>
+    <string name="language_czech">التشيكية</string>
+    <string name="language_ukrainian">الأوكرانية</string>
+    <string name="language_hindi">الهندية</string>
+    <string name="language_portuguese">البرتغالية</string>
+    <string name="language_arabic">العربية</string>
 </resources>

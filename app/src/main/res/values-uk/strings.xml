@@ -11,4 +11,24 @@
     <string name="cancel">Скасувати</string>
     <string name="create">Створити</string>
     <string name="theme_dark">Темна тема</string>
+    <string name="counter_step_format">Крок: %1$d</string>
+    <string name="new_counter_title">Новий лічильник</string>
+    <string name="counter_name_label">Назва</string>
+    <string name="new_counter_default">Новий лічильник</string>
+    <string name="reset">Скинути</string>
+    <string name="back">Назад</string>
+    <string name="edit">Редагувати</string>
+    <string name="language">Мова</string>
+    <string name="select_language">Вибрати мову</string>
+    <string name="language_current_format">Поточна: %1$s</string>
+    <string name="language_english">Англійська</string>
+    <string name="language_spanish">Іспанська</string>
+    <string name="language_german">Німецька</string>
+    <string name="language_italian">Італійська</string>
+    <string name="language_french">Французька</string>
+    <string name="language_czech">Чеська</string>
+    <string name="language_ukrainian">Українська</string>
+    <string name="language_hindi">Гінді</string>
+    <string name="language_portuguese">Португальська</string>
+    <string name="language_arabic">Арабська</string>
 </resources>

@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Quantiq</string>
+    <string name="add_counter">काउंटर जोड़ें</string>
+    <string name="edit_counter">काउंटर संपादित करें</string>
+    <string name="settings">सेटिंग्स</string>
+    <string name="pro_upgrade">PRO में अपग्रेड करें</string>
+    <string name="free_limit_reached">मुफ़्त सीमा पूरी हो गई (3/3)</string>
+    <string name="export_data">डेटा निर्यात करें</string>
+    <string name="import_data">डेटा आयात करें</string>
+    <string name="delete">हटाएं</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="create">बनाएं</string>
+    <string name="theme_dark">डार्क मोड</string>
+    <string name="counter_step_format">चरण: %1$d</string>
+    <string name="new_counter_title">नया काउंटर</string>
+    <string name="counter_name_label">नाम</string>
+    <string name="new_counter_default">नया काउंटर</string>
+    <string name="reset">रीसेट</string>
+    <string name="back">वापस</string>
+    <string name="edit">संपादित करें</string>
+    <string name="language">भाषा</string>
+    <string name="select_language">भाषा चुनें</string>
+    <string name="language_current_format">वर्तमान: %1$s</string>
+    <string name="language_english">अंग्रेज़ी</string>
+    <string name="language_spanish">स्पेनिश</string>
+    <string name="language_german">जर्मन</string>
+    <string name="language_italian">इतालवी</string>
+    <string name="language_french">फ्रेंच</string>
+    <string name="language_czech">चेक</string>
+    <string name="language_ukrainian">यूक्रेनी</string>
+    <string name="language_hindi">हिन्दी</string>
+    <string name="language_portuguese">पुर्तगाली</string>
+    <string name="language_arabic">अरबी</string>
+</resources>
