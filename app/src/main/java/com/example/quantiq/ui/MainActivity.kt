@@ -15,7 +15,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.quantiq.QuantiqApplication
+import com.example.quantiq.ui.navigation.NavArguments
+import com.example.quantiq.ui.navigation.NavRoutes
 import com.example.quantiq.ui.screens.DetailScreen
+import com.example.quantiq.ui.screens.GuidelineDetailScreen
+import com.example.quantiq.ui.screens.GuidelinesScreen
 import com.example.quantiq.ui.screens.ListScreen
 import com.example.quantiq.ui.screens.SettingsScreen
 import com.example.quantiq.ui.theme.QuantiqTheme
@@ -51,23 +55,44 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     val mainViewModel: MainViewModel = viewModel(factory = mainViewModelFactory)
 
-                    NavHost(navController = navController, startDestination = "list") {
-                        composable("list") {
+                    NavHost(navController = navController, startDestination = NavRoutes.LIST) {
+                        composable(NavRoutes.LIST) {
                             ListScreen(viewModel = mainViewModel, navController = navController)
                         }
                         composable(
-                            route = "details/{id}",
-                            arguments = listOf(navArgument("id") { type = NavType.LongType })
+                            route = NavRoutes.COUNTER_DETAILS,
+                            arguments = listOf(
+                                navArgument(NavArguments.COUNTER_ID) { type = NavType.LongType }
+                            )
                         ) { backStackEntry ->
-                            val counterId = backStackEntry.arguments?.getLong("id") ?: 0L
+                            val counterId = backStackEntry.arguments
+                                ?.getLong(NavArguments.COUNTER_ID)
+                                ?: 0L
                             DetailScreen(
                                 counterId = counterId,
                                 viewModel = mainViewModel,
                                 navController = navController
                             )
                         }
-                        composable("settings") {
+                        composable(NavRoutes.SETTINGS) {
                             SettingsScreen(navController = navController)
+                        }
+                        composable(NavRoutes.GUIDELINES) {
+                            GuidelinesScreen(navController = navController)
+                        }
+                        composable(
+                            route = NavRoutes.GUIDELINE_DETAILS,
+                            arguments = listOf(
+                                navArgument(NavArguments.GUIDELINE_ID) { type = NavType.IntType }
+                            )
+                        ) { backStackEntry ->
+                            val guidelineId = backStackEntry.arguments
+                                ?.getInt(NavArguments.GUIDELINE_ID)
+                                ?: 0
+                            GuidelineDetailScreen(
+                                categoryId = guidelineId,
+                                navController = navController
+                            )
                         }
                     }
                 }

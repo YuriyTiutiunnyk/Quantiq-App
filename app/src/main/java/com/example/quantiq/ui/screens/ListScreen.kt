@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,6 +27,7 @@ import com.example.quantiq.R
 import com.example.quantiq.domain.model.Counter
 import com.example.quantiq.ui.MainIntent
 import com.example.quantiq.ui.MainViewModel
+import com.example.quantiq.ui.navigation.NavRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,7 +53,7 @@ fun ListScreen(
             FloatingActionButton(onClick = {
                 if (!state.isPro && state.counters.size >= 3) {
                     // Show Limit Snackbar or Navigate to PRO
-                    navController.navigate("settings")
+                    navController.navigate(NavRoutes.SETTINGS)
                 } else {
                     showDialog = true
                 }
@@ -64,16 +66,21 @@ fun ListScreen(
             modifier = Modifier.padding(padding).padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            item {
+                GuidelinesEntryCard(
+                    onClick = { navController.navigate(NavRoutes.GUIDELINES) }
+                )
+            }
             items(state.counters) { counter ->
                 CounterItem(counter = counter, onClick = {
-                    navController.navigate("details/${counter.id}")
+                    navController.navigate(NavRoutes.counterDetails(counter.id))
                 })
             }
             
             // Placeholder for locked item
             if (!state.isPro && state.counters.size >= 3) {
                 item {
-                    LockedItem(onClick = { navController.navigate("settings") })
+                    LockedItem(onClick = { navController.navigate(NavRoutes.SETTINGS) })
                 }
             }
         }
@@ -136,6 +143,40 @@ fun LockedItem(onClick: () -> Unit) {
             Icon(Icons.Default.Lock, contentDescription = null)
             Spacer(modifier = Modifier.width(8.dp))
             Text(stringResource(R.string.free_limit_reached))
+        }
+    }
+}
+
+@Composable
+fun GuidelinesEntryCard(onClick: () -> Unit) {
+    OutlinedCard(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                Icons.Default.MenuBook,
+                contentDescription = stringResource(R.string.guidelines_navigation),
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = stringResource(R.string.guidelines_title),
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = stringResource(R.string.guidelines_navigation_description),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Icon(
+                Icons.Default.ChevronRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
