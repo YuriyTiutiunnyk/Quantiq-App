@@ -79,6 +79,22 @@
     <string name="notification_snooze_minutes">Snooze minutes</string>
     <string name="notification_save">Save notification</string>
     <string name="notification_not_set">Not set</string>
+    <string name="notification_not_scheduled">Not scheduled</string>
     <string name="notification_channel_name">Item reminders</string>
     <string name="notification_channel_description">Local reminders for counters.</string>
+    <string name="notifications_settings_title">Notifications</string>
+    <string name="notifications_settings_subtitle">Manage item reminders</string>
+    <string name="notification_details_title">Notification details</string>
+    <string name="notification_item_missing">Item not found.</string>
+    <string name="enable_all_notifications">Enable all notifications</string>
+    <string name="disable_all_notifications">Disable all</string>
+    <string name="item_notifications_header">Item notifications</string>
+    <string name="notification_next_scheduled_format">Next: %1$s</string>
+    <string name="request_notification_permission">Request permission</string>
+    <string name="upcoming_schedule_title">Upcoming schedule</string>
+    <string name="upcoming_schedule_header">Upcoming notifications</string>
+    <string name="upcoming_filter_title">Filter</string>
+    <string name="upcoming_filter_all">All items</string>
+    <string name="upcoming_filter_selected">Selected items</string>
+    <string name="upcoming_filter_select_items">Select items</string>
 </resources>

@@ -25,6 +25,15 @@ import com.example.quantiq.ui.screens.GuidelineDetailScreen
 import com.example.quantiq.ui.screens.GuidelinesScreen
 import com.example.quantiq.ui.screens.ListScreen
 import com.example.quantiq.ui.screens.SettingsScreen
+import com.example.quantiq.ui.settings.notifications.NotificationDetailsScreen
+import com.example.quantiq.ui.settings.notifications.NotificationDetailsViewModel
+import com.example.quantiq.ui.settings.notifications.NotificationDetailsViewModelFactory
+import com.example.quantiq.ui.settings.notifications.NotificationsSettingsScreen
+import com.example.quantiq.ui.settings.notifications.NotificationsSettingsViewModel
+import com.example.quantiq.ui.settings.notifications.NotificationsSettingsViewModelFactory
+import com.example.quantiq.ui.settings.notifications.UpcomingScheduleScreen
+import com.example.quantiq.ui.settings.notifications.UpcomingScheduleViewModel
+import com.example.quantiq.ui.settings.notifications.UpcomingScheduleViewModelFactory
 import com.example.quantiq.ui.theme.QuantiqTheme
 import com.example.quantiq.notifications.NotificationConstants
 
@@ -51,6 +60,19 @@ class MainActivity : ComponentActivity() {
             appContainer.getItemNotificationConfigUseCase,
             appContainer.upsertItemNotificationConfigUseCase,
             appContainer.disableItemNotificationUseCase
+        )
+        val notificationsSettingsViewModelFactory = NotificationsSettingsViewModelFactory(
+            appContainer.observeCountersUseCase,
+            appContainer.observeAllNotificationConfigsUseCase,
+            appContainer.setNotificationEnabledUseCase,
+            appContainer.disableAllNotificationsUseCase
+        )
+        val notificationDetailsViewModelFactory = NotificationDetailsViewModelFactory(
+            appContainer.observeCounterUseCase
+        )
+        val upcomingScheduleViewModelFactory = UpcomingScheduleViewModelFactory(
+            appContainer.observeCountersUseCase,
+            appContainer.getUpcomingNotificationsUseCase
         )
 
         setContent {
@@ -103,6 +125,50 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(NavRoutes.SETTINGS) {
                             SettingsScreen(navController = navController)
+                        }
+                        composable(NavRoutes.NOTIFICATIONS_SETTINGS) {
+                            val settingsViewModel: NotificationsSettingsViewModel = viewModel(
+                                factory = notificationsSettingsViewModelFactory
+                            )
+                            NotificationsSettingsScreen(
+                                navController = navController,
+                                viewModel = settingsViewModel
+                            )
+                        }
+                        composable(
+                            route = NavRoutes.NOTIFICATION_DETAILS,
+                            arguments = listOf(
+                                navArgument(NavArguments.NOTIFICATION_ITEM_ID) {
+                                    type = NavType.LongType
+                                }
+                            )
+                        ) { backStackEntry ->
+                            val itemId = backStackEntry.arguments
+                                ?.getLong(NavArguments.NOTIFICATION_ITEM_ID)
+                                ?: 0L
+                            val notificationViewModel: ItemNotificationViewModel = viewModel(
+                                factory = notificationViewModelFactory,
+                                key = "notification_details_$itemId"
+                            )
+                            val detailsViewModel: NotificationDetailsViewModel = viewModel(
+                                factory = notificationDetailsViewModelFactory,
+                                key = "notification_counter_$itemId"
+                            )
+                            NotificationDetailsScreen(
+                                itemId = itemId,
+                                navController = navController,
+                                notificationViewModel = notificationViewModel,
+                                detailsViewModel = detailsViewModel
+                            )
+                        }
+                        composable(NavRoutes.UPCOMING_SCHEDULE) {
+                            val upcomingViewModel: UpcomingScheduleViewModel = viewModel(
+                                factory = upcomingScheduleViewModelFactory
+                            )
+                            UpcomingScheduleScreen(
+                                navController = navController,
+                                viewModel = upcomingViewModel
+                            )
                         }
                         composable(NavRoutes.GUIDELINES) {
                             GuidelinesScreen(navController = navController)

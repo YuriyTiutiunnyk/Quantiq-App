@@ -13,11 +13,16 @@ import com.example.quantiq.domain.repository.CounterRepository
 import com.example.quantiq.domain.repository.ItemNotificationRepository
 import com.example.quantiq.domain.usecase.AddCounterUseCase
 import com.example.quantiq.domain.usecase.DeleteCounterUseCase
+import com.example.quantiq.domain.usecase.DisableAllNotificationsUseCase
 import com.example.quantiq.domain.usecase.DisableItemNotificationUseCase
+import com.example.quantiq.domain.usecase.GetUpcomingNotificationsUseCase
 import com.example.quantiq.domain.usecase.GetItemNotificationConfigUseCase
+import com.example.quantiq.domain.usecase.ObserveAllNotificationConfigsUseCase
+import com.example.quantiq.domain.usecase.ObserveCounterUseCase
 import com.example.quantiq.domain.usecase.ObserveCountersUseCase
 import com.example.quantiq.domain.usecase.RescheduleAllEnabledNotificationsUseCase
 import com.example.quantiq.domain.usecase.ResetCounterUseCase
+import com.example.quantiq.domain.usecase.SetNotificationEnabledUseCase
 import com.example.quantiq.domain.usecase.UpsertItemNotificationConfigUseCase
 import com.example.quantiq.domain.usecase.UpdateCounterDetailsUseCase
 import com.example.quantiq.domain.usecase.UpdateCounterValueUseCase
@@ -53,6 +58,7 @@ class AppContainer(
     }
 
     val observeCountersUseCase: ObserveCountersUseCase by lazy { ObserveCountersUseCase(repository) }
+    val observeCounterUseCase: ObserveCounterUseCase by lazy { ObserveCounterUseCase(repository) }
     val addCounterUseCase: AddCounterUseCase by lazy { AddCounterUseCase(repository) }
     val updateCounterValueUseCase: UpdateCounterValueUseCase by lazy { UpdateCounterValueUseCase(repository) }
     val updateCounterDetailsUseCase: UpdateCounterDetailsUseCase by lazy { UpdateCounterDetailsUseCase(repository) }
@@ -62,11 +68,23 @@ class AppContainer(
     val getItemNotificationConfigUseCase: GetItemNotificationConfigUseCase by lazy {
         GetItemNotificationConfigUseCase(itemNotificationRepository)
     }
+    val observeAllNotificationConfigsUseCase: ObserveAllNotificationConfigsUseCase by lazy {
+        ObserveAllNotificationConfigsUseCase(itemNotificationRepository)
+    }
     val upsertItemNotificationConfigUseCase: UpsertItemNotificationConfigUseCase by lazy {
         UpsertItemNotificationConfigUseCase(itemNotificationRepository, notificationScheduler)
     }
     val disableItemNotificationUseCase: DisableItemNotificationUseCase by lazy {
         DisableItemNotificationUseCase(itemNotificationRepository, notificationScheduler)
+    }
+    val setNotificationEnabledUseCase: SetNotificationEnabledUseCase by lazy {
+        SetNotificationEnabledUseCase(itemNotificationRepository, notificationScheduler)
+    }
+    val disableAllNotificationsUseCase: DisableAllNotificationsUseCase by lazy {
+        DisableAllNotificationsUseCase(itemNotificationRepository, notificationScheduler)
+    }
+    val getUpcomingNotificationsUseCase: GetUpcomingNotificationsUseCase by lazy {
+        GetUpcomingNotificationsUseCase(itemNotificationRepository)
     }
     val rescheduleAllEnabledNotificationsUseCase: RescheduleAllEnabledNotificationsUseCase by lazy {
         RescheduleAllEnabledNotificationsUseCase(notificationScheduler)
