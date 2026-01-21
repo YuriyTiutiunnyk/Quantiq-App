@@ -31,4 +31,23 @@
     <string name="language_hindi">Hindi</string>
     <string name="language_portuguese">Português</string>
     <string name="language_arabic">Árabe</string>
+    <string name="local_notification_section">Local notification</string>
+    <string name="notification_permission_denied">Notification permission is denied. Enable it to receive reminders.</string>
+    <string name="open_notification_settings">Open notification settings</string>
+    <string name="notification_title">Title</string>
+    <string name="notification_body">Body</string>
+    <string name="notification_schedule">Schedule</string>
+    <string name="notification_schedule_type">Schedule type</string>
+    <string name="notification_start_at">Start</string>
+    <string name="notification_repeat">Repeat</string>
+    <string name="notification_repeat_interval">Repeat interval (minutes)</string>
+    <string name="notification_end_at">End</string>
+    <string name="notification_actions">Actions</string>
+    <string name="notification_add_action">Add action</string>
+    <string name="notification_action_label">Action label</string>
+    <string name="notification_snooze_minutes">Snooze minutes</string>
+    <string name="notification_save">Save notification</string>
+    <string name="notification_not_set">Not set</string>
+    <string name="notification_channel_name">Item reminders</string>
+    <string name="notification_channel_description">Local reminders for counters.</string>
 </resources>

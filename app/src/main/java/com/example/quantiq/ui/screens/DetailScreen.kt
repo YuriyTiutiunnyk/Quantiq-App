@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
@@ -23,12 +25,14 @@ import androidx.navigation.NavController
 import com.example.quantiq.R
 import com.example.quantiq.ui.MainIntent
 import com.example.quantiq.ui.MainViewModel
+import com.example.quantiq.ui.ItemNotificationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
     counterId: Long,
     viewModel: MainViewModel,
+    notificationViewModel: ItemNotificationViewModel,
     navController: NavController
 ) {
     // In real app, collect specific counter flow
@@ -66,9 +70,10 @@ fun DetailScreen(
         Column(
             modifier = Modifier
                 .padding(padding)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Top
         ) {
             Text(
                 text = counter.value.toString(),
@@ -105,6 +110,10 @@ fun DetailScreen(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(stringResource(R.string.reset))
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            ItemNotificationSection(counter = counter, viewModel = notificationViewModel)
         }
     }
 }
