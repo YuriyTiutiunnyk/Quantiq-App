@@ -40,7 +40,7 @@ class ItemNotificationWorker(
 
         if (canNotify) {
             val notification = NotificationCompat.Builder(applicationContext, NotificationConstants.CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle(config.title)
                 .setContentText(config.body)
                 .setContentIntent(createContentIntent(itemId))
@@ -52,7 +52,10 @@ class ItemNotificationWorker(
                             NotificationActionType.MARK_DONE,
                             NotificationActionType.SNOOZE -> createActionIntent(itemId, action.type, action.payload, index)
                         }
-                        addAction(R.drawable.ic_launcher_foreground, action.label, pendingIntent)
+                        val actionIcon = R.drawable.ic_notification
+                        addAction(
+                            NotificationCompat.Action.Builder(actionIcon, action.label, pendingIntent).build()
+                        )
                     }
                 }
                 .build()
