@@ -11,6 +11,9 @@ import com.example.quantiq.domain.usecase.ResetCounterUseCase
 import com.example.quantiq.domain.usecase.UpdateCounterDetailsUseCase
 import com.example.quantiq.domain.usecase.UpdateCounterValueUseCase
 
+/**
+ * Represents MainViewModelFactory.
+ */
 class MainViewModelFactory(
     private val observeCountersUseCase: ObserveCountersUseCase,
     private val addCounterUseCase: AddCounterUseCase,

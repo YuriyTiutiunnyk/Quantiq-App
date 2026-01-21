@@ -4,6 +4,9 @@ import com.example.quantiq.domain.model.NotificationAction
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
+/**
+ * Singleton NotificationJsonAdapter definition.
+ */
 object NotificationJsonAdapter {
     private val gson = Gson()
     private val actionListType = object : TypeToken<List<NotificationAction>>() {}.type

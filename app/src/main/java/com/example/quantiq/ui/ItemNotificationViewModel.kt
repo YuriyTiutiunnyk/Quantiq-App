@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
+/**
+ * Represents ItemNotificationViewModel.
+ */
 class ItemNotificationViewModel(
     private val getItemNotificationConfigUseCase: GetItemNotificationConfigUseCase,
     private val upsertItemNotificationConfigUseCase: UpsertItemNotificationConfigUseCase,

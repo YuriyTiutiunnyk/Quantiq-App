@@ -8,6 +8,9 @@ import com.example.quantiq.domain.repository.ItemNotificationRepository
 import java.time.ZoneId
 import java.util.concurrent.TimeUnit
 
+/**
+ * Represents SetNotificationEnabledUseCase.
+ */
 class SetNotificationEnabledUseCase(
     private val repository: ItemNotificationRepository,
     private val scheduler: NotificationScheduler

@@ -3,6 +3,9 @@ package com.example.quantiq.domain.usecase
 import com.example.quantiq.domain.notification.NotificationScheduler
 import com.example.quantiq.domain.repository.ItemNotificationRepository
 
+/**
+ * Represents DisableItemNotificationUseCase.
+ */
 class DisableItemNotificationUseCase(
     private val repository: ItemNotificationRepository,
     private val scheduler: NotificationScheduler

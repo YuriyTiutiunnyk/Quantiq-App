@@ -8,6 +8,9 @@ import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Represents CounterEntity.
+ */
 @Entity(tableName = "counters")
 data class CounterEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
@@ -17,6 +20,9 @@ data class CounterEntity(
     val isLocked: Boolean = false // For future PRO logic
 )
 
+/**
+ * Defines the CounterDao contract.
+ */
 @Dao
 interface CounterDao {
     @Query("SELECT * FROM counters ORDER BY id DESC")

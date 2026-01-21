@@ -17,6 +17,9 @@ import com.example.quantiq.notifications.NotificationConstants
 /**
  * Hosts the Compose entry point, wiring the app container dependencies into [AppRoot].
  */
+/**
+ * Represents MainActivity.
+ */
 class MainActivity : ComponentActivity() {
     private val pendingNotificationItemId = mutableStateOf<Long?>(null)
 

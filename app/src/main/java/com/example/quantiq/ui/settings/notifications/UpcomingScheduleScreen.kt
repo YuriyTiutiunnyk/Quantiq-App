@@ -154,6 +154,9 @@ private fun rememberScheduleFormatter(): ScheduleFormatter {
     return ScheduleFormatter(zoneId, formatter)
 }
 
+/**
+ * Represents ScheduleFormatter.
+ */
 private class ScheduleFormatter(
     private val zoneId: ZoneId,
     private val formatter: DateTimeFormatter

@@ -15,6 +15,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+/**
+ * Represents NotificationSettingsItem.
+ */
 data class NotificationSettingsItem(
     val itemId: Long,
     val itemTitle: String,
@@ -24,11 +27,17 @@ data class NotificationSettingsItem(
     val enabled: Boolean
 )
 
+/**
+ * Represents NotificationsSettingsState.
+ */
 data class NotificationsSettingsState(
     val items: List<NotificationSettingsItem> = emptyList(),
     val allEnabled: Boolean = false
 )
 
+/**
+ * Represents NotificationsSettingsViewModel.
+ */
 class NotificationsSettingsViewModel(
     observeCountersUseCase: ObserveCountersUseCase,
     observeAllNotificationConfigsUseCase: ObserveAllNotificationConfigsUseCase,

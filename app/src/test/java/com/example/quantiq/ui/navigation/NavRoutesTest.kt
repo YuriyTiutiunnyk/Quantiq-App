@@ -6,6 +6,9 @@ import org.junit.Test
 /**
  * Unit tests for route builders in [NavRoutes].
  */
+/**
+ * Represents NavRoutesTest.
+ */
 class NavRoutesTest {
     @Test
     fun `counter details route includes id`() {

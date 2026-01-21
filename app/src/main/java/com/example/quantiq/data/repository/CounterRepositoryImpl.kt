@@ -9,6 +9,9 @@ import com.example.quantiq.domain.repository.CounterRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+/**
+ * Represents CounterRepositoryImpl.
+ */
 class CounterRepositoryImpl(
     private val counterDao: CounterDao
 ) : CounterRepository {

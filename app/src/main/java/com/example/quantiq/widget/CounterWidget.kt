@@ -35,12 +35,18 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.quantiq.ui.theme.QuantiqTheme
 
 // Keys for storing widget state
+/**
+ * Singleton WidgetKeys definition.
+ */
 object WidgetKeys {
     val counterId = intPreferencesKey("counter_id")
     val counterTitle = stringPreferencesKey("counter_title")
     val counterValue = intPreferencesKey("counter_value")
 }
 
+/**
+ * Represents CounterWidget.
+ */
 class CounterWidget : GlanceAppWidget() {
     
     override val stateDefinition: GlanceStateDefinition<*> = PreferencesGlanceStateDefinition
@@ -93,10 +99,16 @@ class CounterWidget : GlanceAppWidget() {
     }
 }
 
+/**
+ * Represents CounterWidgetReceiver.
+ */
 class CounterWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = CounterWidget()
 }
 
+/**
+ * Represents WidgetAction.
+ */
 class WidgetAction : ActionCallback {
     companion object {
         const val INCREMENT = "increment"

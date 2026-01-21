@@ -7,6 +7,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
+/**
+ * Represents QuantiqApplication.
+ */
 class QuantiqApplication : Application() {
     private val applicationScope = CoroutineScope(SupervisorJob())
     lateinit var appContainer: AppContainer

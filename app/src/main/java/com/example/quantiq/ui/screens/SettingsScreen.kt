@@ -40,6 +40,9 @@ import com.example.quantiq.R
 import com.example.quantiq.ui.navigation.NavRoutes
 import java.util.Locale
 
+/**
+ * Represents LanguageOption.
+ */
 data class LanguageOption(
     val tag: String,
     val labelResId: Int

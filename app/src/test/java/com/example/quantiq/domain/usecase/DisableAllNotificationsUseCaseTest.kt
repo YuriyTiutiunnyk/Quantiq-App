@@ -7,6 +7,9 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
+/**
+ * Represents DisableAllNotificationsUseCaseTest.
+ */
 class DisableAllNotificationsUseCaseTest {
     @Test
     fun `disable all cancels enabled configs and updates repository`() = runBlocking {

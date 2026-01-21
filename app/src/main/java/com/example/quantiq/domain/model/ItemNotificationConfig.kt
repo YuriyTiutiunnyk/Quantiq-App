@@ -1,5 +1,8 @@
 package com.example.quantiq.domain.model
 
+/**
+ * Represents ItemNotificationConfig.
+ */
 data class ItemNotificationConfig(
     val itemId: Long,
     val enabled: Boolean,
@@ -14,11 +17,17 @@ data class ItemNotificationConfig(
     val actions: List<NotificationAction>
 )
 
+/**
+ * Enumerates ScheduleType values.
+ */
 enum class ScheduleType {
     ONE_TIME,
     REPEATING
 }
 
+/**
+ * Enumerates RepeatType values.
+ */
 enum class RepeatType {
     NONE,
     DAILY,

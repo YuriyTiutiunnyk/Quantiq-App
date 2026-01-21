@@ -6,6 +6,9 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Defines the ItemNotificationConfigDao contract.
+ */
 @Dao
 interface ItemNotificationConfigDao {
     @Query("SELECT * FROM item_notification_configs WHERE itemId = :itemId LIMIT 1")

@@ -6,6 +6,9 @@ import com.example.quantiq.domain.repository.ItemNotificationRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
+/**
+ * Represents FakeItemNotificationRepository.
+ */
 class FakeItemNotificationRepository(
     initialConfigs: List<ItemNotificationConfig> = emptyList()
 ) : ItemNotificationRepository {
@@ -45,6 +48,9 @@ class FakeItemNotificationRepository(
         configs.value.values.filter { it.enabled }
 }
 
+/**
+ * Represents FakeNotificationScheduler.
+ */
 class FakeNotificationScheduler : NotificationScheduler {
     val scheduled = mutableListOf<ItemNotificationConfig>()
     val cancelled = mutableListOf<Long>()

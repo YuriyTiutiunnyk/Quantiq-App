@@ -10,6 +10,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 
+/**
+ * Represents NotificationDetailsViewModel.
+ */
 class NotificationDetailsViewModel(
     private val observeCounterUseCase: ObserveCounterUseCase
 ) : ViewModel() {

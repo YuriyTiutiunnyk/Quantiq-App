@@ -29,6 +29,9 @@ import com.example.quantiq.domain.usecase.UpdateCounterValueUseCase
 import com.example.quantiq.notifications.LocalNotificationScheduler
 import kotlinx.coroutines.CoroutineScope
 
+/**
+ * Represents AppContainer.
+ */
 class AppContainer(
     private val appContext: Context,
     private val applicationScope: CoroutineScope

@@ -5,6 +5,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.quantiq.domain.usecase.GetUpcomingNotificationsUseCase
 import com.example.quantiq.domain.usecase.ObserveCountersUseCase
 
+/**
+ * Represents UpcomingScheduleViewModelFactory.
+ */
 class UpcomingScheduleViewModelFactory(
     private val observeCountersUseCase: ObserveCountersUseCase,
     private val getUpcomingNotificationsUseCase: GetUpcomingNotificationsUseCase

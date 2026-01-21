@@ -8,6 +8,9 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.concurrent.TimeUnit
 
+/**
+ * Represents NotificationScheduleCalculator.
+ */
 class NotificationScheduleCalculator {
     fun nextTriggerMillis(
         config: ItemNotificationConfig,
