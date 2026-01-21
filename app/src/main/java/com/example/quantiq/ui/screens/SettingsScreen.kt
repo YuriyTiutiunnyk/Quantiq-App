@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
 import androidx.navigation.NavController
 import com.example.quantiq.R
+import com.example.quantiq.ui.navigation.NavRoutes
 import java.util.Locale
 
 data class LanguageOption(
@@ -109,6 +111,12 @@ fun SettingsScreen(navController: NavController) {
                     stringResource(selectedLanguage.labelResId)
                 ),
                 onClick = { showLanguageDialog = true }
+            )
+            SettingCard(
+                icon = { Icon(Icons.Default.Notifications, contentDescription = null) },
+                title = stringResource(R.string.notifications_settings_title),
+                subtitle = stringResource(R.string.notifications_settings_subtitle),
+                onClick = { navController.navigate(NavRoutes.NOTIFICATIONS_SETTINGS) }
             )
         }
     }

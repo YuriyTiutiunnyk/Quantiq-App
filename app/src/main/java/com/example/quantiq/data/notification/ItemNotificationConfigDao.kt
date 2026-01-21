@@ -14,6 +14,12 @@ interface ItemNotificationConfigDao {
     @Query("SELECT * FROM item_notification_configs WHERE itemId = :itemId LIMIT 1")
     suspend fun getByItemId(itemId: Long): ItemNotificationConfigEntity?
 
+    @Query("SELECT * FROM item_notification_configs")
+    fun observeAll(): Flow<List<ItemNotificationConfigEntity>>
+
+    @Query("SELECT * FROM item_notification_configs")
+    suspend fun getAll(): List<ItemNotificationConfigEntity>
+
     @Query("SELECT * FROM item_notification_configs WHERE enabled = 1")
     suspend fun getEnabledConfigs(): List<ItemNotificationConfigEntity>
 
@@ -22,6 +28,9 @@ interface ItemNotificationConfigDao {
 
     @Query("UPDATE item_notification_configs SET enabled = 0 WHERE itemId = :itemId")
     suspend fun disable(itemId: Long)
+
+    @Query("UPDATE item_notification_configs SET enabled = 0")
+    suspend fun disableAll()
 
     @Query("DELETE FROM item_notification_configs WHERE itemId = :itemId")
     suspend fun delete(itemId: Long)

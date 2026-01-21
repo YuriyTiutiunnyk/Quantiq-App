@@ -14,8 +14,14 @@ class ItemNotificationRepositoryImpl(
     override fun observeConfig(itemId: Long): Flow<ItemNotificationConfig?> =
         dao.observeByItemId(itemId).map { entity -> entity?.toDomain() }
 
+    override fun observeAllConfigs(): Flow<List<ItemNotificationConfig>> =
+        dao.observeAll().map { entities -> entities.map { it.toDomain() } }
+
     override suspend fun getConfig(itemId: Long): ItemNotificationConfig? =
         dao.getByItemId(itemId)?.toDomain()
+
+    override suspend fun getAllConfigs(): List<ItemNotificationConfig> =
+        dao.getAll().map { it.toDomain() }
 
     override suspend fun upsertConfig(config: ItemNotificationConfig) {
         dao.upsert(config.toEntity())
@@ -23,6 +29,10 @@ class ItemNotificationRepositoryImpl(
 
     override suspend fun disableConfig(itemId: Long) {
         dao.disable(itemId)
+    }
+
+    override suspend fun disableAllConfigs() {
+        dao.disableAll()
     }
 
     override suspend fun deleteConfig(itemId: Long) {
