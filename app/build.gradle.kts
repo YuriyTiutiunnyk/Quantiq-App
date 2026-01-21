@@ -60,6 +60,7 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     implementation(libs.com.google.code.gson)
+    implementation(libs.androidx.workmanager.runtime.ktx)
 
     implementation(libs.com.android.billingclient.ktx)
 

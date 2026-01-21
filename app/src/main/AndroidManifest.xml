@@ -1,5 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:allowBackup="true"
         android:name=".QuantiqApplication"
@@ -26,6 +28,10 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/counter_widget" />
         </receiver>
+
+        <receiver
+            android:name="com.example.quantiq.notifications.NotificationActionReceiver"
+            android:exported="false" />
 
     </application>
 </manifest>
