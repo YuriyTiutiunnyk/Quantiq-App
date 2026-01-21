@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.LibraryBooks
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -99,6 +100,7 @@ enum class GuidelineCategory(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GuidelinesScreen(navController: NavController) {
     Scaffold(
@@ -149,6 +151,7 @@ fun GuidelinesScreen(navController: NavController) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GuidelineDetailScreen(
     categoryId: Int,

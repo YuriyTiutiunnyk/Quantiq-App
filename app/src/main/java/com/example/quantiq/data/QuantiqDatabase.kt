@@ -21,9 +21,9 @@ abstract class QuantiqDatabase : RoomDatabase() {
 
     companion object {
         val MIGRATION_1_2 = object : Migration(1, 2) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL(
-                    \"\"\"
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
                     CREATE TABLE IF NOT EXISTS item_notification_configs (
                         itemId INTEGER NOT NULL,
                         enabled INTEGER NOT NULL,
@@ -38,7 +38,7 @@ abstract class QuantiqDatabase : RoomDatabase() {
                         actionsJson TEXT NOT NULL,
                         PRIMARY KEY(itemId)
                     )
-                    \"\"\".trimIndent()
+                    """.trimIndent()
                 )
             }
         }
