@@ -1,11 +1,17 @@
 package com.example.quantiq.ui.navigation
 
+/**
+ * Navigation argument keys shared across destinations.
+ */
 object NavArguments {
     const val COUNTER_ID = "counterId"
     const val GUIDELINE_ID = "guidelineId"
     const val NOTIFICATION_ITEM_ID = "notificationItemId"
 }
 
+/**
+ * Centralized route definitions and helpers for the app navigation graph.
+ */
 object NavRoutes {
     private const val ROUTE_SEPARATOR = "/"
     private const val DETAILS_BASE = "details"
@@ -24,11 +30,20 @@ object NavRoutes {
     const val NOTIFICATION_DETAILS = "$NOTIFICATION_DETAILS_BASE/{${NavArguments.NOTIFICATION_ITEM_ID}}"
     const val UPCOMING_SCHEDULE = UPCOMING_SCHEDULE_BASE
 
+    /**
+     * Builds the route for a specific counter detail destination.
+     */
     fun counterDetails(counterId: Long): String = DETAILS_BASE + ROUTE_SEPARATOR + counterId
 
+    /**
+     * Builds the route for a specific guideline detail destination.
+     */
     fun guidelineDetails(guidelineId: Int): String =
         GUIDELINE_DETAIL_BASE + ROUTE_SEPARATOR + guidelineId
 
+    /**
+     * Builds the route for a specific notification detail destination.
+     */
     fun notificationDetails(itemId: Long): String =
         NOTIFICATION_DETAILS_BASE + ROUTE_SEPARATOR + itemId
 }
