@@ -57,7 +57,10 @@ import com.example.quantiq.domain.model.ScheduleType
 import com.example.quantiq.ui.ItemNotificationViewModel
 import java.time.Instant
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
 @Composable
@@ -282,9 +285,13 @@ private fun DateTimePickerButton(
     allowClear: Boolean = false
 ) {
     val context = LocalContext.current
-    val formatter = remember { DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm") }
+    val formatter = remember(zoneId) {
+        SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).apply {
+            timeZone = TimeZone.getTimeZone(zoneId.id)
+        }
+    }
     val displayText = epochMillis?.let {
-        Instant.ofEpochMilli(it).atZone(zoneId).format(formatter)
+        formatter.format(Date(it))
     } ?: stringResource(R.string.notification_not_set)
 
     Row(verticalAlignment = Alignment.CenterVertically) {
