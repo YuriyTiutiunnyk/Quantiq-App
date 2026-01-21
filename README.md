@@ -1,19 +1,31 @@
 # Quantiq - Android Skeleton
 
-This folder contains the Kotlin source code for the native Android application.
+This repository contains the Kotlin source code for the Quantiq Android app skeleton, wired with
+Jetpack Compose, Navigation Compose, Room, and a lightweight `AppContainer` dependency setup.
+
+## Current behavior
+- Launches into a real Compose entry point (`AppRoot`) that hosts the navigation graph.
+- Default start destination is the counter list screen.
+- Navigation routes cover counter details, settings, notification settings/detail flows, upcoming
+  schedules, and Google guidelines screens.
 
 ## Structure
 - `data/`: Room entities, DAOs, and repository implementation.
 - `domain/`: Domain models and use cases.
 - `di/`: Simple app container for wiring dependencies.
-- `ui/`: Jetpack Compose screens and ViewModel.
+- `ui/`: Jetpack Compose screens, navigation, and ViewModels.
 - `widget/`: Jetpack Glance app widget implementation.
 
-## How to use
-1. Create a new "Empty Activity" project in Android Studio.
-2. Select "Kotlin" and "Jetpack Compose".
-3. Copy these files into your `src/main/java/com/example/quantiq` directory.
-4. Add the following dependencies to your `build.gradle.kts` (app module):
+## How to run
+1. Open the project in Android Studio.
+2. Use a locally installed Gradle (the wrapper JAR is intentionally not committed).
+3. Build or run with:
+   - `gradle assembleDebug` or
+   - `gradle installDebug`
+
+## Dependency notes
+Add the following dependencies to your `build.gradle.kts` (app module) if they are not already
+present:
 
 ```kotlin
 dependencies {
