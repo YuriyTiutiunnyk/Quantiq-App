@@ -33,6 +33,9 @@ import com.example.quantiq.ui.navigation.NavRoutes
 
 private const val BULLET_SEPARATOR = "•"
 
+/**
+ * Enumerates GuidelineCategory values.
+ */
 enum class GuidelineCategory(
     val id: Int,
     @StringRes val titleResId: Int,

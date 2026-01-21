@@ -3,6 +3,9 @@ package com.example.quantiq.domain.repository
 import com.example.quantiq.domain.model.ItemNotificationConfig
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Defines the ItemNotificationRepository contract.
+ */
 interface ItemNotificationRepository {
     fun observeConfig(itemId: Long): Flow<ItemNotificationConfig?>
     fun observeAllConfigs(): Flow<List<ItemNotificationConfig>>

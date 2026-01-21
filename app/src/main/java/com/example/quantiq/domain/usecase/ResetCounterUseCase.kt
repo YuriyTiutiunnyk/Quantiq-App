@@ -2,6 +2,9 @@ package com.example.quantiq.domain.usecase
 
 import com.example.quantiq.domain.repository.CounterRepository
 
+/**
+ * Represents ResetCounterUseCase.
+ */
 class ResetCounterUseCase(
     private val repository: CounterRepository
 ) {

@@ -6,6 +6,9 @@ import com.example.quantiq.domain.usecase.DisableItemNotificationUseCase
 import com.example.quantiq.domain.usecase.GetItemNotificationConfigUseCase
 import com.example.quantiq.domain.usecase.UpsertItemNotificationConfigUseCase
 
+/**
+ * Represents ItemNotificationViewModelFactory.
+ */
 class ItemNotificationViewModelFactory(
     private val getItemNotificationConfigUseCase: GetItemNotificationConfigUseCase,
     private val upsertItemNotificationConfigUseCase: UpsertItemNotificationConfigUseCase,

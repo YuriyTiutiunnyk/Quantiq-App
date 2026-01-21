@@ -4,6 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.quantiq.domain.usecase.ObserveCounterUseCase
 
+/**
+ * Represents NotificationDetailsViewModelFactory.
+ */
 class NotificationDetailsViewModelFactory(
     private val observeCounterUseCase: ObserveCounterUseCase
 ) : ViewModelProvider.Factory {

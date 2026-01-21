@@ -6,10 +6,22 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
+/**
+ * Defines the UiState contract.
+ */
 interface UiState
+/**
+ * Defines the UiIntent contract.
+ */
 interface UiIntent
+/**
+ * Defines the UiEffect contract.
+ */
 interface UiEffect
 
+/**
+ * Represents MviViewModel.
+ */
 abstract class MviViewModel<S : UiState, I : UiIntent, E : UiEffect>(initialState: S) : androidx.lifecycle.ViewModel() {
 
     private val _state = MutableStateFlow(initialState)

@@ -14,6 +14,9 @@ import com.example.quantiq.QuantiqApplication
 import com.example.quantiq.domain.model.NotificationActionType
 import kotlinx.coroutines.flow.firstOrNull
 
+/**
+ * Represents ItemNotificationWorker.
+ */
 class ItemNotificationWorker(
     appContext: Context,
     params: WorkerParameters

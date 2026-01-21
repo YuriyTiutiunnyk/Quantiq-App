@@ -12,6 +12,9 @@ import com.example.quantiq.data.notification.ItemNotificationConfigEntity
     version = 2,
     exportSchema = false
 )
+/**
+ * Represents QuantiqDatabase.
+ */
 abstract class QuantiqDatabase : RoomDatabase() {
     abstract fun counterDao(): CounterDao
     abstract fun itemNotificationConfigDao(): ItemNotificationConfigDao

@@ -4,6 +4,9 @@ import com.example.quantiq.domain.model.UpcomingNotification
 import com.example.quantiq.domain.notification.NotificationScheduleCalculator
 import com.example.quantiq.domain.repository.ItemNotificationRepository
 
+/**
+ * Represents GetUpcomingNotificationsUseCase.
+ */
 class GetUpcomingNotificationsUseCase(
     private val repository: ItemNotificationRepository,
     private val scheduleCalculator: NotificationScheduleCalculator = NotificationScheduleCalculator()

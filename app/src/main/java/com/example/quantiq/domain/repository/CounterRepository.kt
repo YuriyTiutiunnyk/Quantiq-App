@@ -3,6 +3,9 @@ package com.example.quantiq.domain.repository
 import com.example.quantiq.domain.model.Counter
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Defines the CounterRepository contract.
+ */
 interface CounterRepository {
     fun observeCounters(): Flow<List<Counter>>
     fun observeCounter(id: Long): Flow<Counter?>

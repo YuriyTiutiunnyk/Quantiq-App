@@ -3,6 +3,9 @@ package com.example.quantiq.data.notification
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+/**
+ * Represents ItemNotificationConfigEntity.
+ */
 @Entity(tableName = "item_notification_configs")
 data class ItemNotificationConfigEntity(
     @PrimaryKey val itemId: Long,

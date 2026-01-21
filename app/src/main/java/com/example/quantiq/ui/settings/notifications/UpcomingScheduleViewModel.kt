@@ -13,11 +13,17 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+/**
+ * Enumerates UpcomingFilterMode values.
+ */
 enum class UpcomingFilterMode {
     ALL,
     SELECTED
 }
 
+/**
+ * Represents UpcomingNotificationUi.
+ */
 data class UpcomingNotificationUi(
     val itemId: Long,
     val itemTitle: String,
@@ -26,6 +32,9 @@ data class UpcomingNotificationUi(
     val scheduledAtEpochMillis: Long
 )
 
+/**
+ * Represents UpcomingScheduleState.
+ */
 data class UpcomingScheduleState(
     val counters: List<Counter> = emptyList(),
     val filterMode: UpcomingFilterMode = UpcomingFilterMode.ALL,
@@ -33,6 +42,9 @@ data class UpcomingScheduleState(
     val upcoming: List<UpcomingNotificationUi> = emptyList()
 )
 
+/**
+ * Represents UpcomingScheduleViewModel.
+ */
 class UpcomingScheduleViewModel(
     observeCountersUseCase: ObserveCountersUseCase,
     private val getUpcomingNotificationsUseCase: GetUpcomingNotificationsUseCase

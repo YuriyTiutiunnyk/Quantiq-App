@@ -16,6 +16,9 @@ import com.example.quantiq.mvi.UiIntent
 import com.example.quantiq.mvi.UiState
 import kotlinx.coroutines.launch
 
+/**
+ * Represents MainState.
+ */
 data class MainState(
     val counters: List<Counter> = emptyList(),
     val isLoading: Boolean = false,
@@ -23,24 +26,79 @@ data class MainState(
     val error: String? = null
 ) : UiState
 
+/**
+ * Represents MainIntent.
+ */
 sealed class MainIntent : UiIntent {
+    /**
+     * Represents LoadCounters.
+     */
     data class LoadCounters(val forceRefresh: Boolean = false) : MainIntent()
+
+    /**
+     * Represents AddCounter.
+     */
     data class AddCounter(val title: String, val step: Int = 1) : MainIntent()
+
+    /**
+     * Represents UpdateCounterValue.
+     */
     data class UpdateCounterValue(val counter: Counter, val delta: Int) : MainIntent()
+
+    /**
+     * Represents UpdateCounterDetails.
+     */
     data class UpdateCounterDetails(val counter: Counter, val title: String, val step: Int) : MainIntent()
+
+    /**
+     * Represents DeleteCounter.
+     */
     data class DeleteCounter(val id: Long) : MainIntent()
+
+    /**
+     * Represents ResetCounter.
+     */
     data class ResetCounter(val id: Long) : MainIntent()
+
+    /**
+     * Singleton PurchasePro definition.
+     */
     object PurchasePro : MainIntent()
+
+    /**
+     * Represents ExportData.
+     */
     data class ExportData(val uri: android.net.Uri) : MainIntent()
+
+    /**
+     * Represents ImportData.
+     */
     data class ImportData(val uri: android.net.Uri) : MainIntent()
 }
 
+/**
+ * Represents MainEffect.
+ */
 sealed class MainEffect : UiEffect {
+    /**
+     * Represents ShowToast.
+     */
     data class ShowToast(val message: String) : MainEffect()
+
+    /**
+     * Singleton NavigateToSettings definition.
+     */
     object NavigateToSettings : MainEffect()
+
+    /**
+     * Singleton LaunchBilling definition.
+     */
     object LaunchBilling : MainEffect()
 }
 
+/**
+ * Represents MainViewModel.
+ */
 class MainViewModel(
     private val observeCountersUseCase: ObserveCountersUseCase,
     private val addCounterUseCase: AddCounterUseCase,

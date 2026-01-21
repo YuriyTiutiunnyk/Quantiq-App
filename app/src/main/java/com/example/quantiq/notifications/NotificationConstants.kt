@@ -1,5 +1,8 @@
 package com.example.quantiq.notifications
 
+/**
+ * Singleton NotificationConstants definition.
+ */
 object NotificationConstants {
     const val CHANNEL_ID = "item_reminders"
     const val EXTRA_ITEM_ID = "extra_item_id"

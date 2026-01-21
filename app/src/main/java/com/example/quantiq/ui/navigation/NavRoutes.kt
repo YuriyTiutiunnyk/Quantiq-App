@@ -3,6 +3,9 @@ package com.example.quantiq.ui.navigation
 /**
  * Navigation argument keys shared across destinations.
  */
+/**
+ * Singleton NavArguments definition.
+ */
 object NavArguments {
     const val COUNTER_ID = "counterId"
     const val GUIDELINE_ID = "guidelineId"
@@ -11,6 +14,9 @@ object NavArguments {
 
 /**
  * Centralized route definitions and helpers for the app navigation graph.
+ */
+/**
+ * Singleton NavRoutes definition.
  */
 object NavRoutes {
     private const val ROUTE_SEPARATOR = "/"

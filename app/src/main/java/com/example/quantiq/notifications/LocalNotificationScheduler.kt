@@ -11,6 +11,9 @@ import com.example.quantiq.domain.repository.ItemNotificationRepository
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
+/**
+ * Represents LocalNotificationScheduler.
+ */
 class LocalNotificationScheduler(
     private val workManager: WorkManager,
     private val repository: ItemNotificationRepository

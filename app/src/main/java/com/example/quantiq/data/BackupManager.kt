@@ -10,12 +10,18 @@ import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
+/**
+ * Represents BackupData.
+ */
 data class BackupData(
     val version: Int = 1,
     val timestamp: Long,
     val counters: List<Counter>
 )
 
+/**
+ * Represents BackupManager.
+ */
 class BackupManager(private val context: Context) {
     private val gson: Gson = GsonBuilder().setPrettyPrinting().create()
 

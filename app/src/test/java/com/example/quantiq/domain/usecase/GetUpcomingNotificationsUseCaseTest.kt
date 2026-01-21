@@ -7,6 +7,9 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
+/**
+ * Represents GetUpcomingNotificationsUseCaseTest.
+ */
 class GetUpcomingNotificationsUseCaseTest {
     @Test
     fun `upcoming notifications are sorted and filtered`() = runBlocking {

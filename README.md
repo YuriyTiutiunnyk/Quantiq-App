@@ -1,54 +1,106 @@
-# Quantiq - Android Skeleton
+# Quantiq Android App
 
-This repository contains the Kotlin source code for the Quantiq Android app skeleton, wired with
-Jetpack Compose, Navigation Compose, Room, and a lightweight `AppContainer` dependency setup.
+Quantiq is a Kotlin/Jetpack Compose Android application that implements a counter tracking flow with
+notifications, billing, backups, and a Glance widget. The project follows a lightweight layered
+architecture (data/domain/ui) with a small DI container and MVI-style view models.
 
-## Current behavior
-- Launches into a real Compose entry point (`AppRoot`) that hosts the navigation graph.
-- Default start destination is the counter list screen.
-- Navigation routes cover counter details, settings, notification settings/detail flows, upcoming
-  schedules, and Google guidelines screens.
+## Project structure
 
-## Structure
-- `data/`: Room entities, DAOs, and repository implementation.
-- `domain/`: Domain models and use cases.
-- `di/`: Simple app container for wiring dependencies.
-- `ui/`: Jetpack Compose screens, navigation, and ViewModels.
-- `widget/`: Jetpack Glance app widget implementation.
-
-## How to run
-1. Open the project in Android Studio.
-2. Use a locally installed Gradle (the wrapper JAR is intentionally not committed).
-3. Build or run with:
-   - `gradle assembleDebug` or
-   - `gradle installDebug`
-
-## Dependency notes
-Add the following dependencies to your `build.gradle.kts` (app module) if they are not already
-present:
-
-```kotlin
-dependencies {
-    // Room
-    val room_version = "2.6.1"
-    implementation("androidx.room:room-runtime:$room_version")
-    ksp("androidx.room:room-compiler:$room_version")
-    implementation("androidx.room:room-ktx:$room_version")
-
-    // Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.7")
-
-    // Glance (Widgets)
-    implementation("androidx.glance:glance-appwidget:1.0.0")
-    implementation("androidx.glance:glance-material3:1.0.0")
-
-    // Icons
-    implementation("androidx.compose.material:material-icons-extended:1.6.0")
-}
+```
+.
+├── app
+│   ├── src/main
+│   │   ├── java/com/example/quantiq
+│   │   │   ├── billing
+│   │   │   ├── data
+│   │   │   ├── di
+│   │   │   ├── domain
+│   │   │   ├── mvi
+│   │   │   ├── notifications
+│   │   │   ├── ui
+│   │   │   └── widget
+│   │   └── res
+│   └── src/test
+│       └── java/com/example/quantiq
+├── gradle
+├── build.gradle.kts
+├── settings.gradle.kts
+└── gradle.properties
 ```
 
-## Notes
-- This repository does not commit `gradle/wrapper/gradle-wrapper.jar` because some PR systems reject binary files.
-  Use a locally installed Gradle to build (for example, `gradle assembleDebug`) or to regenerate the wrapper
-  (`gradle wrapper`).
-- The app uses a simple `AppContainer` to wire dependencies; if you migrate to Hilt, you can replace it cleanly.
+### App module (`app`)
+
+**`billing/`**
+- `BillingManager`: wraps Play Billing client state and exposes purchase flow events.
+
+**`data/`**
+- `CounterEntity`: Room entity representing a persisted counter row.
+- `QuantiqDatabase`: Room database holder for counters and notifications.
+- `BackupManager`: JSON import/export utility for counters.
+- `mapper/CounterMapper`: maps between database entities and domain models.
+- `notification/ItemNotificationConfigEntity`: Room entity for notification settings.
+- `notification/ItemNotificationConfigDao`: DAO for notification config CRUD.
+- `notification/ItemNotificationConfigMapper`: maps notification configs between layers.
+- `notification/NotificationJsonAdapter`: Gson adapter for serializing notification configs.
+- `repository/CounterRepositoryImpl`: data-layer implementation of counter repository.
+- `repository/ItemNotificationRepositoryImpl`: data-layer implementation of notification repository.
+
+**`di/`**
+- `AppContainer`: lightweight dependency wiring (repositories, schedulers, use cases, managers).
+
+**`domain/`**
+- `model/Counter`: domain representation of a counter.
+- `model/ItemNotificationConfig`: domain representation of notification configuration.
+- `model/NotificationAction`: enum describing notification click actions.
+- `model/UpcomingNotification`: upcoming scheduled notification model.
+- `notification/NotificationScheduler`: interface for scheduling/canceling notifications.
+- `notification/NotificationScheduleCalculator`: calculates upcoming schedules.
+- `repository/CounterRepository`: domain contract for counter storage.
+- `repository/ItemNotificationRepository`: domain contract for notification config storage.
+- `usecase/*`: single-responsibility use cases for counters and notifications (observe, update,
+  reset, schedule, enable/disable, etc.).
+
+**`mvi/`**
+- `MviViewModel`: base class for MVI view models with state/effect flows.
+- `UiState`, `UiIntent`, `UiEffect`: marker contracts for MVI layers.
+
+**`notifications/`**
+- `NotificationConstants`: shared constants (IDs, channels, extras).
+- `NotificationChannels`: creates Android notification channels.
+- `LocalNotificationScheduler`: WorkManager-backed scheduler implementation.
+- `ItemNotificationWorker`: worker that delivers scheduled notifications.
+- `NotificationActionReceiver`: broadcast receiver for notification actions.
+
+**`ui/`**
+- `MainActivity`: app entry activity hosting Compose content.
+- `AppRoot`: Compose root that wires navigation and top-level UI.
+- `MainViewModel`: main screen state management (counters/billing/backup).
+- `MainViewModelFactory`: ViewModel factory for `MainViewModel`.
+- `ItemNotificationViewModel`: view model for per-item notification settings.
+- `ItemNotificationViewModelFactory`: factory for notification view model.
+- `navigation/NavRoutes`: typed routes and navigation helpers.
+- `screens/`: Compose screens for list/detail/settings/guidelines.
+- `settings/notifications/`: notification settings screens and view models.
+- `theme/Theme`: Compose Material3 theme setup.
+
+**`widget/`**
+- `CounterWidget`: Glance app widget presenting counter data.
+
+### Tests (`app/src/test`)
+- `domain/usecase/*Test`: verifies use case behavior with fakes.
+- `ui/navigation/NavRoutesTest`: validates route formatting.
+- `domain/usecase/Fakes`: test doubles for repositories and schedulers.
+
+## Build and run
+
+1. Open the project in Android Studio.
+2. Use a locally installed Gradle or regenerate the wrapper if needed.
+3. Build or run:
+   - `gradle assembleDebug`
+   - `gradle installDebug`
+
+## Compose compiler configuration
+
+The project uses the Kotlin Compose compiler Gradle plugin (required for Kotlin 2.0+ when Compose
+is enabled). See `app/build.gradle.kts` for the applied plugin and `gradle/libs.versions.toml` for
+version management.

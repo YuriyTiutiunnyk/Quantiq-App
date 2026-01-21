@@ -5,6 +5,9 @@ import android.app.NotificationManager
 import android.content.Context
 import com.example.quantiq.R
 
+/**
+ * Singleton NotificationChannels definition.
+ */
 object NotificationChannels {
     fun create(context: Context) {
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

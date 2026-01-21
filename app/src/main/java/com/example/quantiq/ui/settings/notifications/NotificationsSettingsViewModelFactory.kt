@@ -7,6 +7,9 @@ import com.example.quantiq.domain.usecase.ObserveAllNotificationConfigsUseCase
 import com.example.quantiq.domain.usecase.ObserveCountersUseCase
 import com.example.quantiq.domain.usecase.SetNotificationEnabledUseCase
 
+/**
+ * Represents NotificationsSettingsViewModelFactory.
+ */
 class NotificationsSettingsViewModelFactory(
     private val observeCountersUseCase: ObserveCountersUseCase,
     private val observeAllNotificationConfigsUseCase: ObserveAllNotificationConfigsUseCase,

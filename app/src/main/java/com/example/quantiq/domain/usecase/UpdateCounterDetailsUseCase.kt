@@ -3,6 +3,9 @@ package com.example.quantiq.domain.usecase
 import com.example.quantiq.domain.model.Counter
 import com.example.quantiq.domain.repository.CounterRepository
 
+/**
+ * Represents UpdateCounterDetailsUseCase.
+ */
 class UpdateCounterDetailsUseCase(
     private val repository: CounterRepository
 ) {

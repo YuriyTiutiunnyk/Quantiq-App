@@ -8,6 +8,9 @@ import com.example.quantiq.domain.repository.ItemNotificationRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
+/**
+ * Represents ItemNotificationRepositoryImpl.
+ */
 class ItemNotificationRepositoryImpl(
     private val dao: ItemNotificationConfigDao
 ) : ItemNotificationRepository {

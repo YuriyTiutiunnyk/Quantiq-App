@@ -9,6 +9,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+/**
+ * Represents BillingManager.
+ */
 class BillingManager(
     context: Context,
     private val scope: CoroutineScope
