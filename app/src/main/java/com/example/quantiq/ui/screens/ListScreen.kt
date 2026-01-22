@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material3.*
@@ -87,7 +88,17 @@ fun ListScreen(
                             restoreState = true
                         }
                     },
-                    onDelete = { viewModel.dispatch(MainIntent.DeleteCounter(counter.id)) }
+                    onDelete = { viewModel.dispatch(MainIntent.DeleteCounter(counter.id)) },
+                    onEdit = {
+                        viewModel.dispatch(MainIntent.SetActiveCounter(counter.id))
+                        navController.navigate(NavRoutes.ACTIVE) {
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                        navController.navigate(NavRoutes.counterDetails(counter.id)) {
+                            launchSingleTop = true
+                        }
+                    }
                 )
             }
             
@@ -116,7 +127,8 @@ fun CounterItem(
     counter: Counter,
     isActive: Boolean,
     onSelect: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onEdit: () -> Unit
 ) {
     Card(
         onClick = onSelect,
@@ -156,6 +168,12 @@ fun CounterItem(
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
+                IconButton(onClick = onEdit) {
+                    Icon(
+                        Icons.Default.Edit,
+                        contentDescription = stringResource(R.string.edit_item)
+                    )
+                }
                 IconButton(
                     onClick = onDelete,
                     enabled = !counter.isDefault

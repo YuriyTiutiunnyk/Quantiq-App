@@ -52,4 +52,7 @@ interface CounterDao {
     
     @Query("UPDATE counters SET value = 0 WHERE id = :id")
     suspend fun resetCounter(id: Long)
+
+    @Query("UPDATE counters SET value = 0")
+    suspend fun resetAllCounters()
 }

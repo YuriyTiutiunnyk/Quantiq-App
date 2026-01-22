@@ -36,6 +36,7 @@ class MainActivity : ComponentActivity() {
             appContainer.updateCounterDetailsUseCase,
             appContainer.deleteCounterUseCase,
             appContainer.resetCounterUseCase,
+            appContainer.resetAllCountersUseCase,
             appContainer.observeActiveItemIdUseCase,
             appContainer.setActiveItemIdUseCase,
             appContainer.initializeDefaultCounterUseCase,

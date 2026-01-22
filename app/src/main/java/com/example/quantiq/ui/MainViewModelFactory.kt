@@ -10,6 +10,7 @@ import com.example.quantiq.domain.usecase.InitializeDefaultCounterUseCase
 import com.example.quantiq.domain.usecase.ObserveCountersUseCase
 import com.example.quantiq.domain.usecase.ObserveActiveItemIdUseCase
 import com.example.quantiq.domain.usecase.ResetCounterUseCase
+import com.example.quantiq.domain.usecase.ResetAllCountersUseCase
 import com.example.quantiq.domain.usecase.SetActiveItemIdUseCase
 import com.example.quantiq.domain.usecase.UpdateCounterDetailsUseCase
 import com.example.quantiq.domain.usecase.UpdateCounterValueUseCase
@@ -24,6 +25,7 @@ class MainViewModelFactory(
     private val updateCounterDetailsUseCase: UpdateCounterDetailsUseCase,
     private val deleteCounterUseCase: DeleteCounterUseCase,
     private val resetCounterUseCase: ResetCounterUseCase,
+    private val resetAllCountersUseCase: ResetAllCountersUseCase,
     private val observeActiveItemIdUseCase: ObserveActiveItemIdUseCase,
     private val setActiveItemIdUseCase: SetActiveItemIdUseCase,
     private val initializeDefaultCounterUseCase: InitializeDefaultCounterUseCase,
@@ -40,6 +42,7 @@ class MainViewModelFactory(
                 updateCounterDetailsUseCase,
                 deleteCounterUseCase,
                 resetCounterUseCase,
+                resetAllCountersUseCase,
                 observeActiveItemIdUseCase,
                 setActiveItemIdUseCase,
                 initializeDefaultCounterUseCase,

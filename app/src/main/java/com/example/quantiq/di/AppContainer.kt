@@ -26,6 +26,7 @@ import com.example.quantiq.domain.usecase.ObserveCounterUseCase
 import com.example.quantiq.domain.usecase.ObserveCountersUseCase
 import com.example.quantiq.domain.usecase.RescheduleAllEnabledNotificationsUseCase
 import com.example.quantiq.domain.usecase.ResetCounterUseCase
+import com.example.quantiq.domain.usecase.ResetAllCountersUseCase
 import com.example.quantiq.domain.usecase.SetActiveItemIdUseCase
 import com.example.quantiq.domain.usecase.SetNotificationEnabledUseCase
 import com.example.quantiq.domain.usecase.UpsertItemNotificationConfigUseCase
@@ -79,6 +80,7 @@ class AppContainer(
     val updateCounterDetailsUseCase: UpdateCounterDetailsUseCase by lazy { UpdateCounterDetailsUseCase(repository) }
     val deleteCounterUseCase: DeleteCounterUseCase by lazy { DeleteCounterUseCase(repository) }
     val resetCounterUseCase: ResetCounterUseCase by lazy { ResetCounterUseCase(repository) }
+    val resetAllCountersUseCase: ResetAllCountersUseCase by lazy { ResetAllCountersUseCase(repository) }
     val observeActiveItemIdUseCase: ObserveActiveItemIdUseCase by lazy {
         ObserveActiveItemIdUseCase(activeItemRepository)
     }

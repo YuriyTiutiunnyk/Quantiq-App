@@ -35,7 +35,6 @@ class CounterRepositoryImpl(
                 isDefault = isDefault
             )
         )
-    }
 
     override suspend fun updateCounter(counter: Counter) {
         counterDao.update(counter.toEntity())
@@ -52,6 +51,10 @@ class CounterRepositoryImpl(
 
     override suspend fun resetCounter(id: Long) {
         counterDao.resetCounter(id)
+    }
+
+    override suspend fun resetAllCounters() {
+        counterDao.resetAllCounters()
     }
 
     override suspend fun getCounter(id: Long): Counter? =
