@@ -1,18 +1,12 @@
 package com.example.quantiq.ui
 
 import android.view.View
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Tune
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -31,6 +25,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.compose.ui.res.stringResource
 import com.example.quantiq.R
+import com.example.quantiq.ui.components.BottomBarItem
+import com.example.quantiq.ui.components.BottomBarItemPosition
+import com.example.quantiq.ui.components.ConvexBottomBar
 import com.example.quantiq.ui.navigation.NavArguments
 import com.example.quantiq.ui.navigation.NavRoutes
 import com.example.quantiq.ui.screens.ActiveItemScreen
@@ -95,18 +92,40 @@ fun AppRoot(
         Scaffold(
             bottomBar = {
                 if (showBottomBar) {
-                    CustomBottomBar(
-                        currentRoute = currentRoute,
-                        onNavigate = { route ->
-                            navController.navigate(route) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
+                    Surface(shadowElevation = 8.dp) {
+                        ConvexBottomBar(
+                            currentRoute = currentRoute,
+                            items = listOf(
+                                BottomBarItem(
+                                    route = NavRoutes.LIST,
+                                    label = stringResource(R.string.tab_list),
+                                    icon = Icons.Default.List,
+                                    position = BottomBarItemPosition.Left
+                                ),
+                                BottomBarItem(
+                                    route = NavRoutes.ACTIVE,
+                                    label = stringResource(R.string.tab_active),
+                                    icon = Icons.Default.Tune,
+                                    position = BottomBarItemPosition.Center
+                                ),
+                                BottomBarItem(
+                                    route = NavRoutes.SETTINGS,
+                                    label = stringResource(R.string.tab_settings),
+                                    icon = Icons.Default.Settings,
+                                    position = BottomBarItemPosition.Right
+                                )
+                            ),
+                            onNavigate = { route ->
+                                navController.navigate(route) {
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         ) { padding ->
@@ -204,60 +223,6 @@ fun AppRoot(
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun CustomBottomBar(
-    currentRoute: String?,
-    onNavigate: (String) -> Unit
-) {
-    Surface(shadowElevation = 8.dp) {
-        Row(
-            modifier = androidx.compose.ui.Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp, vertical = 12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            BottomBarButton(
-                selected = currentRoute == NavRoutes.LIST,
-                label = stringResource(R.string.tab_list),
-                icon = Icons.Default.List,
-                onClick = { onNavigate(NavRoutes.LIST) }
-            )
-            BottomBarButton(
-                selected = currentRoute == NavRoutes.ACTIVE,
-                label = stringResource(R.string.tab_active),
-                icon = Icons.Default.Tune,
-                onClick = { onNavigate(NavRoutes.ACTIVE) }
-            )
-            BottomBarButton(
-                selected = currentRoute == NavRoutes.SETTINGS,
-                label = stringResource(R.string.tab_settings),
-                icon = Icons.Default.Settings,
-                onClick = { onNavigate(NavRoutes.SETTINGS) }
-            )
-        }
-    }
-}
-
-@Composable
-private fun BottomBarButton(
-    selected: Boolean,
-    label: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    onClick: () -> Unit
-) {
-    val contentColor = if (selected) {
-        MaterialTheme.colorScheme.primary
-    } else {
-        MaterialTheme.colorScheme.onSurfaceVariant
-    }
-    androidx.compose.material3.TextButton(onClick = onClick) {
-        androidx.compose.foundation.layout.Column(horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
-            Icon(icon, contentDescription = label, tint = contentColor)
-            Text(text = label, color = contentColor, style = MaterialTheme.typography.labelMedium)
         }
     }
 }

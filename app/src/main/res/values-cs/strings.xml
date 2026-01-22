@@ -97,4 +97,20 @@
     <string name="upcoming_filter_all">All items</string>
     <string name="upcoming_filter_selected">Selected items</string>
     <string name="upcoming_filter_select_items">Select items</string>
+    <string name="save">Save</string>
+    <string name="reset_all_items">Reset all items</string>
+    <string name="reset_all_title">Reset all counters?</string>
+    <string name="reset_all_body">This will set every counter back to zero.</string>
+    <string name="reset_all_confirm">Reset all</string>
+    <string name="edit_item">Edit item</string>
+    <string name="increment_symbol">+</string>
+    <string name="decrement_symbol">–</string>
+    <string name="step_label">Step</string>
+    <string name="step_picker_title">Choose step</string>
+    <string name="step_custom_option">Custom…</string>
+    <string name="custom_step_title">Custom step</string>
+    <string name="custom_step_label">Step value</string>
+    <string name="custom_step_invalid">Enter a valid step value.</string>
+    <string name="custom_step_pro_message">Custom steps are a PRO feature.</string>
+    <string name="upgrade_action">Upgrade</string>
 </resources>

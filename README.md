@@ -79,7 +79,8 @@ architecture (data/domain/ui) with a small DI container and MVI-style view model
 - `ItemNotificationViewModel`: view model for per-item notification settings.
 - `ItemNotificationViewModelFactory`: factory for notification view model.
 - `navigation/NavRoutes`: typed routes and navigation helpers.
-- `screens/`: Compose screens for list/detail/settings/guidelines.
+- `screens/`: Compose screens for list/detail/settings/guidelines, including step selection and reset flows.
+- `components/`: reusable UI elements like the convex bottom bar and elevated circular buttons.
 - `settings/notifications/`: notification settings screens and view models.
 - `theme/Theme`: Compose Material3 theme setup.
 

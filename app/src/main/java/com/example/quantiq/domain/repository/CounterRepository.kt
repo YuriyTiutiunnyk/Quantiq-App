@@ -19,6 +19,7 @@ interface CounterRepository {
     suspend fun updateCounterValue(counter: Counter, delta: Int)
     suspend fun deleteCounter(id: Long)
     suspend fun resetCounter(id: Long)
+    suspend fun resetAllCounters()
     suspend fun getCounter(id: Long): Counter?
     suspend fun getDefaultCounter(): Counter?
     suspend fun getCounterCount(): Int
