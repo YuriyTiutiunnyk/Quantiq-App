@@ -1,20 +1,39 @@
 package com.example.quantiq.ui
 
 import android.view.View
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.compose.ui.res.stringResource
+import com.example.quantiq.R
 import com.example.quantiq.ui.navigation.NavArguments
 import com.example.quantiq.ui.navigation.NavRoutes
+import com.example.quantiq.ui.screens.ActiveItemScreen
 import com.example.quantiq.ui.screens.DetailScreen
 import com.example.quantiq.ui.screens.GuidelineDetailScreen
 import com.example.quantiq.ui.screens.GuidelinesScreen
@@ -54,6 +73,11 @@ fun AppRoot(
     CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
         val navController = rememberNavController()
         val mainViewModel: MainViewModel = viewModel(factory = mainViewModelFactory)
+        val activeTabs = listOf(NavRoutes.LIST, NavRoutes.ACTIVE, NavRoutes.SETTINGS)
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
+        val showBottomBar = currentRoute in activeTabs
+        val defaultTitle = stringResource(R.string.default_item_title)
 
         LaunchedEffect(initialNotificationItemId) {
             if (initialNotificationItemId != null) {
@@ -64,92 +88,176 @@ fun AppRoot(
             }
         }
 
-        NavHost(navController = navController, startDestination = NavRoutes.LIST) {
-            composable(NavRoutes.LIST) {
-                ListScreen(viewModel = mainViewModel, navController = navController)
+        LaunchedEffect(defaultTitle) {
+            mainViewModel.dispatch(MainIntent.InitializeDefaultCounter(defaultTitle))
+        }
+
+        Scaffold(
+            bottomBar = {
+                if (showBottomBar) {
+                    CustomBottomBar(
+                        currentRoute = currentRoute,
+                        onNavigate = { route ->
+                            navController.navigate(route) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    )
+                }
             }
-            composable(
-                route = NavRoutes.COUNTER_DETAILS,
-                arguments = listOf(
-                    navArgument(NavArguments.COUNTER_ID) { type = NavType.LongType }
-                )
-            ) { backStackEntry ->
-                val counterId = backStackEntry.arguments
-                    ?.getLong(NavArguments.COUNTER_ID)
-                    ?: 0L
-                val notificationViewModel: ItemNotificationViewModel = viewModel(
-                    factory = notificationViewModelFactory,
-                    key = "notification_$counterId"
-                )
-                DetailScreen(
-                    counterId = counterId,
-                    viewModel = mainViewModel,
-                    notificationViewModel = notificationViewModel,
-                    navController = navController
-                )
+        ) { padding ->
+            NavHost(
+                navController = navController,
+                startDestination = NavRoutes.LIST,
+                modifier = androidx.compose.ui.Modifier.padding(padding)
+            ) {
+                composable(NavRoutes.LIST) {
+                    ListScreen(viewModel = mainViewModel, navController = navController)
+                }
+                composable(NavRoutes.ACTIVE) {
+                    ActiveItemScreen(viewModel = mainViewModel, navController = navController)
+                }
+                composable(
+                    route = NavRoutes.COUNTER_DETAILS,
+                    arguments = listOf(
+                        navArgument(NavArguments.COUNTER_ID) { type = NavType.LongType }
+                    )
+                ) { backStackEntry ->
+                    val counterId = backStackEntry.arguments
+                        ?.getLong(NavArguments.COUNTER_ID)
+                        ?: 0L
+                    val notificationViewModel: ItemNotificationViewModel = viewModel(
+                        factory = notificationViewModelFactory,
+                        key = "notification_$counterId"
+                    )
+                    DetailScreen(
+                        counterId = counterId,
+                        viewModel = mainViewModel,
+                        notificationViewModel = notificationViewModel,
+                        navController = navController
+                    )
+                }
+                composable(NavRoutes.SETTINGS) {
+                    SettingsScreen(navController = navController, showBackButton = false)
+                }
+                composable(NavRoutes.NOTIFICATIONS_SETTINGS) {
+                    val settingsViewModel: NotificationsSettingsViewModel = viewModel(
+                        factory = notificationsSettingsViewModelFactory
+                    )
+                    NotificationsSettingsScreen(
+                        navController = navController,
+                        viewModel = settingsViewModel
+                    )
+                }
+                composable(
+                    route = NavRoutes.NOTIFICATION_DETAILS,
+                    arguments = listOf(
+                        navArgument(NavArguments.NOTIFICATION_ITEM_ID) { type = NavType.LongType }
+                    )
+                ) { backStackEntry ->
+                    val itemId = backStackEntry.arguments
+                        ?.getLong(NavArguments.NOTIFICATION_ITEM_ID)
+                        ?: 0L
+                    val notificationViewModel: ItemNotificationViewModel = viewModel(
+                        factory = notificationViewModelFactory,
+                        key = "notification_details_$itemId"
+                    )
+                    val detailsViewModel: NotificationDetailsViewModel = viewModel(
+                        factory = notificationDetailsViewModelFactory,
+                        key = "notification_counter_$itemId"
+                    )
+                    NotificationDetailsScreen(
+                        itemId = itemId,
+                        navController = navController,
+                        notificationViewModel = notificationViewModel,
+                        detailsViewModel = detailsViewModel
+                    )
+                }
+                composable(NavRoutes.UPCOMING_SCHEDULE) {
+                    val upcomingViewModel: UpcomingScheduleViewModel = viewModel(
+                        factory = upcomingScheduleViewModelFactory
+                    )
+                    UpcomingScheduleScreen(
+                        navController = navController,
+                        viewModel = upcomingViewModel
+                    )
+                }
+                composable(NavRoutes.GUIDELINES) {
+                    GuidelinesScreen(navController = navController)
+                }
+                composable(
+                    route = NavRoutes.GUIDELINE_DETAILS,
+                    arguments = listOf(
+                        navArgument(NavArguments.GUIDELINE_ID) { type = NavType.IntType }
+                    )
+                ) { backStackEntry ->
+                    val guidelineId = backStackEntry.arguments
+                        ?.getInt(NavArguments.GUIDELINE_ID)
+                        ?: 0
+                    GuidelineDetailScreen(
+                        categoryId = guidelineId,
+                        navController = navController
+                    )
+                }
             }
-            composable(NavRoutes.SETTINGS) {
-                SettingsScreen(navController = navController)
-            }
-            composable(NavRoutes.NOTIFICATIONS_SETTINGS) {
-                val settingsViewModel: NotificationsSettingsViewModel = viewModel(
-                    factory = notificationsSettingsViewModelFactory
-                )
-                NotificationsSettingsScreen(
-                    navController = navController,
-                    viewModel = settingsViewModel
-                )
-            }
-            composable(
-                route = NavRoutes.NOTIFICATION_DETAILS,
-                arguments = listOf(
-                    navArgument(NavArguments.NOTIFICATION_ITEM_ID) { type = NavType.LongType }
-                )
-            ) { backStackEntry ->
-                val itemId = backStackEntry.arguments
-                    ?.getLong(NavArguments.NOTIFICATION_ITEM_ID)
-                    ?: 0L
-                val notificationViewModel: ItemNotificationViewModel = viewModel(
-                    factory = notificationViewModelFactory,
-                    key = "notification_details_$itemId"
-                )
-                val detailsViewModel: NotificationDetailsViewModel = viewModel(
-                    factory = notificationDetailsViewModelFactory,
-                    key = "notification_counter_$itemId"
-                )
-                NotificationDetailsScreen(
-                    itemId = itemId,
-                    navController = navController,
-                    notificationViewModel = notificationViewModel,
-                    detailsViewModel = detailsViewModel
-                )
-            }
-            composable(NavRoutes.UPCOMING_SCHEDULE) {
-                val upcomingViewModel: UpcomingScheduleViewModel = viewModel(
-                    factory = upcomingScheduleViewModelFactory
-                )
-                UpcomingScheduleScreen(
-                    navController = navController,
-                    viewModel = upcomingViewModel
-                )
-            }
-            composable(NavRoutes.GUIDELINES) {
-                GuidelinesScreen(navController = navController)
-            }
-            composable(
-                route = NavRoutes.GUIDELINE_DETAILS,
-                arguments = listOf(
-                    navArgument(NavArguments.GUIDELINE_ID) { type = NavType.IntType }
-                )
-            ) { backStackEntry ->
-                val guidelineId = backStackEntry.arguments
-                    ?.getInt(NavArguments.GUIDELINE_ID)
-                    ?: 0
-                GuidelineDetailScreen(
-                    categoryId = guidelineId,
-                    navController = navController
-                )
-            }
+        }
+    }
+}
+
+@Composable
+private fun CustomBottomBar(
+    currentRoute: String?,
+    onNavigate: (String) -> Unit
+) {
+    Surface(shadowElevation = 8.dp) {
+        Row(
+            modifier = androidx.compose.ui.Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            BottomBarButton(
+                selected = currentRoute == NavRoutes.LIST,
+                label = stringResource(R.string.tab_list),
+                icon = Icons.Default.List,
+                onClick = { onNavigate(NavRoutes.LIST) }
+            )
+            BottomBarButton(
+                selected = currentRoute == NavRoutes.ACTIVE,
+                label = stringResource(R.string.tab_active),
+                icon = Icons.Default.Tune,
+                onClick = { onNavigate(NavRoutes.ACTIVE) }
+            )
+            BottomBarButton(
+                selected = currentRoute == NavRoutes.SETTINGS,
+                label = stringResource(R.string.tab_settings),
+                icon = Icons.Default.Settings,
+                onClick = { onNavigate(NavRoutes.SETTINGS) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun BottomBarButton(
+    selected: Boolean,
+    label: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    onClick: () -> Unit
+) {
+    val contentColor = if (selected) {
+        MaterialTheme.colorScheme.primary
+    } else {
+        MaterialTheme.colorScheme.onSurfaceVariant
+    }
+    androidx.compose.material3.TextButton(onClick = onClick) {
+        androidx.compose.foundation.layout.Column(horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
+            Icon(icon, contentDescription = label, tint = contentColor)
+            Text(text = label, color = contentColor, style = MaterialTheme.typography.labelMedium)
         }
     }
 }

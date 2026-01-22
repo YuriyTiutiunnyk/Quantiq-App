@@ -9,7 +9,7 @@ import com.example.quantiq.data.notification.ItemNotificationConfigEntity
 
 @Database(
     entities = [CounterEntity::class, ItemNotificationConfigEntity::class],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 /**
@@ -40,6 +40,12 @@ abstract class QuantiqDatabase : RoomDatabase() {
                     )
                     """.trimIndent()
                 )
+            }
+        }
+
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE counters ADD COLUMN isDefault INTEGER NOT NULL DEFAULT 0")
             }
         }
     }

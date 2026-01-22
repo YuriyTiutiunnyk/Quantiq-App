@@ -21,12 +21,18 @@ class CounterRepositoryImpl(
     override fun observeCounter(id: Long): Flow<Counter?> =
         counterDao.observeCounterById(id).map { counter -> counter?.toDomain() }
 
-    override suspend fun addCounter(title: String, step: Int, value: Int) {
+    override suspend fun addCounter(
+        title: String,
+        step: Int,
+        value: Int,
+        isDefault: Boolean
+    ): Long =
         counterDao.insert(
             CounterEntity(
                 title = title,
                 value = value,
-                step = step
+                step = step,
+                isDefault = isDefault
             )
         )
     }
@@ -47,4 +53,12 @@ class CounterRepositoryImpl(
     override suspend fun resetCounter(id: Long) {
         counterDao.resetCounter(id)
     }
+
+    override suspend fun getCounter(id: Long): Counter? =
+        counterDao.getCounterById(id)?.toDomain()
+
+    override suspend fun getDefaultCounter(): Counter? =
+        counterDao.getDefaultCounter()?.toDomain()
+
+    override suspend fun getCounterCount(): Int = counterDao.getCounterCount()
 }

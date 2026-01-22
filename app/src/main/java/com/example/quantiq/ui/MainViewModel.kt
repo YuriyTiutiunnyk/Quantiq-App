@@ -6,8 +6,11 @@ import com.example.quantiq.data.BackupManager
 import com.example.quantiq.domain.model.Counter
 import com.example.quantiq.domain.usecase.AddCounterUseCase
 import com.example.quantiq.domain.usecase.DeleteCounterUseCase
+import com.example.quantiq.domain.usecase.InitializeDefaultCounterUseCase
 import com.example.quantiq.domain.usecase.ObserveCountersUseCase
+import com.example.quantiq.domain.usecase.ObserveActiveItemIdUseCase
 import com.example.quantiq.domain.usecase.ResetCounterUseCase
+import com.example.quantiq.domain.usecase.SetActiveItemIdUseCase
 import com.example.quantiq.domain.usecase.UpdateCounterDetailsUseCase
 import com.example.quantiq.domain.usecase.UpdateCounterValueUseCase
 import com.example.quantiq.mvi.MviViewModel
@@ -21,6 +24,7 @@ import kotlinx.coroutines.launch
  */
 data class MainState(
     val counters: List<Counter> = emptyList(),
+    val activeItemId: Long? = null,
     val isLoading: Boolean = false,
     val isPro: Boolean = false,
     val error: String? = null
@@ -59,6 +63,16 @@ sealed class MainIntent : UiIntent {
      * Represents ResetCounter.
      */
     data class ResetCounter(val id: Long) : MainIntent()
+
+    /**
+     * Represents InitializeDefaultCounter.
+     */
+    data class InitializeDefaultCounter(val defaultTitle: String) : MainIntent()
+
+    /**
+     * Represents SetActiveCounter.
+     */
+    data class SetActiveCounter(val id: Long) : MainIntent()
 
     /**
      * Singleton PurchasePro definition.
@@ -106,6 +120,9 @@ class MainViewModel(
     private val updateCounterDetailsUseCase: UpdateCounterDetailsUseCase,
     private val deleteCounterUseCase: DeleteCounterUseCase,
     private val resetCounterUseCase: ResetCounterUseCase,
+    private val observeActiveItemIdUseCase: ObserveActiveItemIdUseCase,
+    private val setActiveItemIdUseCase: SetActiveItemIdUseCase,
+    private val initializeDefaultCounterUseCase: InitializeDefaultCounterUseCase,
     private val billingManager: BillingManager,
     private val backupManager: BackupManager
 ) : MviViewModel<MainState, MainIntent, MainEffect>(MainState()) {
@@ -114,6 +131,12 @@ class MainViewModel(
         viewModelScope.launch {
             observeCountersUseCase().collect { counters ->
                 setState { copy(counters = counters) }
+            }
+        }
+
+        viewModelScope.launch {
+            observeActiveItemIdUseCase().collect { activeItemId ->
+                setState { copy(activeItemId = activeItemId) }
             }
         }
         
@@ -153,12 +176,28 @@ class MainViewModel(
             is MainIntent.DeleteCounter -> {
                 viewModelScope.launch {
                     deleteCounterUseCase(intent.id)
+                    if (intent.id == currentState.activeItemId) {
+                        val defaultCounter = currentState.counters.firstOrNull { it.isDefault }
+                        defaultCounter?.let { setActiveItemIdUseCase(it.id) }
+                    }
                 }
             }
             
             is MainIntent.ResetCounter -> {
                 viewModelScope.launch {
                     resetCounterUseCase(intent.id)
+                }
+            }
+
+            is MainIntent.InitializeDefaultCounter -> {
+                viewModelScope.launch {
+                    initializeDefaultCounterUseCase(intent.defaultTitle)
+                }
+            }
+
+            is MainIntent.SetActiveCounter -> {
+                viewModelScope.launch {
+                    setActiveItemIdUseCase(intent.id)
                 }
             }
             

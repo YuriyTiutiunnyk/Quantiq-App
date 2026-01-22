@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material3.*
@@ -73,9 +74,21 @@ fun ListScreen(
                 )
             }
             items(state.counters) { counter ->
-                CounterItem(counter = counter, onClick = {
-                    navController.navigate(NavRoutes.counterDetails(counter.id))
-                })
+                CounterItem(
+                    counter = counter,
+                    isActive = counter.id == state.activeItemId,
+                    onSelect = {
+                        viewModel.dispatch(MainIntent.SetActiveCounter(counter.id))
+                        navController.navigate(NavRoutes.ACTIVE) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                    onDelete = { viewModel.dispatch(MainIntent.DeleteCounter(counter.id)) }
+                )
             }
             
             // Placeholder for locked item
@@ -99,9 +112,14 @@ fun ListScreen(
 }
 
 @Composable
-fun CounterItem(counter: Counter, onClick: () -> Unit) {
+fun CounterItem(
+    counter: Counter,
+    isActive: Boolean,
+    onSelect: () -> Unit,
+    onDelete: () -> Unit
+) {
     Card(
-        onClick = onClick,
+        onClick = onSelect,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
     ) {
         Row(
@@ -109,8 +127,23 @@ fun CounterItem(counter: Counter, onClick: () -> Unit) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(text = counter.title, style = MaterialTheme.typography.titleMedium)
+                Spacer(modifier = Modifier.height(6.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    if (counter.isDefault) {
+                        AssistChip(
+                            onClick = {},
+                            label = { Text(stringResource(R.string.default_item_badge)) }
+                        )
+                    }
+                    if (isActive) {
+                        AssistChip(
+                            onClick = {},
+                            label = { Text(stringResource(R.string.active_item_badge)) }
+                        )
+                    }
+                }
                 Text(
                     text = stringResource(R.string.counter_step_format, counter.step),
                     style = MaterialTheme.typography.bodySmall,
@@ -123,7 +156,27 @@ fun CounterItem(counter: Counter, onClick: () -> Unit) {
                     style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
-                Icon(Icons.Default.ChevronRight, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                IconButton(
+                    onClick = onDelete,
+                    enabled = !counter.isDefault
+                ) {
+                    if (counter.isDefault) {
+                        Icon(
+                            Icons.Default.Lock,
+                            contentDescription = stringResource(R.string.default_item_locked)
+                        )
+                    } else {
+                        Icon(
+                            Icons.Default.Delete,
+                            contentDescription = stringResource(R.string.delete)
+                        )
+                    }
+                }
+                Icon(
+                    Icons.Default.ChevronRight,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
         }
     }

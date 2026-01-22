@@ -6,8 +6,11 @@ import com.example.quantiq.billing.BillingManager
 import com.example.quantiq.data.BackupManager
 import com.example.quantiq.domain.usecase.AddCounterUseCase
 import com.example.quantiq.domain.usecase.DeleteCounterUseCase
+import com.example.quantiq.domain.usecase.InitializeDefaultCounterUseCase
 import com.example.quantiq.domain.usecase.ObserveCountersUseCase
+import com.example.quantiq.domain.usecase.ObserveActiveItemIdUseCase
 import com.example.quantiq.domain.usecase.ResetCounterUseCase
+import com.example.quantiq.domain.usecase.SetActiveItemIdUseCase
 import com.example.quantiq.domain.usecase.UpdateCounterDetailsUseCase
 import com.example.quantiq.domain.usecase.UpdateCounterValueUseCase
 
@@ -21,6 +24,9 @@ class MainViewModelFactory(
     private val updateCounterDetailsUseCase: UpdateCounterDetailsUseCase,
     private val deleteCounterUseCase: DeleteCounterUseCase,
     private val resetCounterUseCase: ResetCounterUseCase,
+    private val observeActiveItemIdUseCase: ObserveActiveItemIdUseCase,
+    private val setActiveItemIdUseCase: SetActiveItemIdUseCase,
+    private val initializeDefaultCounterUseCase: InitializeDefaultCounterUseCase,
     private val billingManager: BillingManager,
     private val backupManager: BackupManager
 ) : ViewModelProvider.Factory {
@@ -34,6 +40,9 @@ class MainViewModelFactory(
                 updateCounterDetailsUseCase,
                 deleteCounterUseCase,
                 resetCounterUseCase,
+                observeActiveItemIdUseCase,
+                setActiveItemIdUseCase,
+                initializeDefaultCounterUseCase,
                 billingManager,
                 backupManager
             ) as T
