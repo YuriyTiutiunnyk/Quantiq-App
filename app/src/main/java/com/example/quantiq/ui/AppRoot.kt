@@ -7,7 +7,6 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -15,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -92,40 +90,38 @@ fun AppRoot(
         Scaffold(
             bottomBar = {
                 if (showBottomBar) {
-                    Surface(shadowElevation = 8.dp) {
-                        ConvexBottomBar(
-                            currentRoute = currentRoute,
-                            items = listOf(
-                                BottomBarItem(
-                                    route = NavRoutes.LIST,
-                                    label = stringResource(R.string.tab_list),
-                                    icon = Icons.Default.List,
-                                    position = BottomBarItemPosition.Left
-                                ),
-                                BottomBarItem(
-                                    route = NavRoutes.ACTIVE,
-                                    label = stringResource(R.string.tab_active),
-                                    icon = Icons.Default.Tune,
-                                    position = BottomBarItemPosition.Center
-                                ),
-                                BottomBarItem(
-                                    route = NavRoutes.SETTINGS,
-                                    label = stringResource(R.string.tab_settings),
-                                    icon = Icons.Default.Settings,
-                                    position = BottomBarItemPosition.Right
-                                )
+                    ConvexBottomBar(
+                        currentRoute = currentRoute,
+                        items = listOf(
+                            BottomBarItem(
+                                route = NavRoutes.LIST,
+                                label = stringResource(R.string.tab_list),
+                                icon = Icons.Default.List,
+                                position = BottomBarItemPosition.Left
                             ),
-                            onNavigate = { route ->
-                                navController.navigate(route) {
-                                    popUpTo(navController.graph.startDestinationId) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
+                            BottomBarItem(
+                                route = NavRoutes.ACTIVE,
+                                label = stringResource(R.string.tab_active),
+                                icon = Icons.Default.Tune,
+                                position = BottomBarItemPosition.Center
+                            ),
+                            BottomBarItem(
+                                route = NavRoutes.SETTINGS,
+                                label = stringResource(R.string.tab_settings),
+                                icon = Icons.Default.Settings,
+                                position = BottomBarItemPosition.Right
+                            )
+                        ),
+                        onNavigate = { route ->
+                            navController.navigate(route) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
                                 }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                        )
-                    }
+                        }
+                    )
                 }
             }
         ) { padding ->
