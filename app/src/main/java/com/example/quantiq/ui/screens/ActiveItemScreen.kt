@@ -23,8 +23,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -184,6 +184,8 @@ fun ActiveItemScreen(
 
     if (activeCounter != null) {
         if (showStepDialog) {
+            val message = stringResource(R.string.custom_step_pro_message)
+            val actionLabel = stringResource(R.string.upgrade_action)
             StepPickerDialog(
                 onDismiss = { showStepDialog = false },
                 onSelectStep = { step ->
@@ -193,14 +195,15 @@ fun ActiveItemScreen(
                     showStepDialog = false
                 },
                 onSelectCustom = {
+
                     showStepDialog = false
                     if (state.isPro) {
                         showCustomStepDialog = true
                     } else {
                         coroutineScope.launch {
                             val result = snackbarHostState.showSnackbar(
-                                message = stringResource(R.string.custom_step_pro_message),
-                                actionLabel = stringResource(R.string.upgrade_action)
+                                message = message,
+                                actionLabel = actionLabel
                             )
                             if (result == androidx.compose.material3.SnackbarResult.ActionPerformed) {
                                 navController.navigate(NavRoutes.SETTINGS)
@@ -224,6 +227,7 @@ fun ActiveItemScreen(
                     )
                 },
                 confirmButton = {
+                    val message = stringResource(R.string.custom_step_invalid)
                     TextButton(
                         onClick = {
                             val step = customStepInput.toIntOrNull()
@@ -239,7 +243,7 @@ fun ActiveItemScreen(
                             } else {
                                 coroutineScope.launch {
                                     snackbarHostState.showSnackbar(
-                                        message = stringResource(R.string.custom_step_invalid)
+                                        message = message
                                     )
                                 }
                             }
