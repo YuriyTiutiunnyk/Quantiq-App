@@ -17,7 +17,8 @@ data class CounterEntity(
     val title: String,
     val value: Int = 0,
     val step: Int = 1,
-    val isLocked: Boolean = false // For future PRO logic
+    val isLocked: Boolean = false, // For future PRO logic
+    val isDefault: Boolean = false
 )
 
 /**
@@ -34,8 +35,14 @@ interface CounterDao {
     @Query("SELECT * FROM counters WHERE id = :id")
     suspend fun getCounterById(id: Long): CounterEntity?
 
+    @Query("SELECT * FROM counters WHERE isDefault = 1 LIMIT 1")
+    suspend fun getDefaultCounter(): CounterEntity?
+
+    @Query("SELECT COUNT(*) FROM counters")
+    suspend fun getCounterCount(): Int
+
     @Insert
-    suspend fun insert(counter: CounterEntity)
+    suspend fun insert(counter: CounterEntity): Long
 
     @Update
     suspend fun update(counter: CounterEntity)

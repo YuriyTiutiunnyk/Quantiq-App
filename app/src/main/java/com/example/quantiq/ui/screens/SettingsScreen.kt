@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -67,7 +68,10 @@ private fun languageFlag(tag: String): String {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(navController: NavController) {
+fun SettingsScreen(
+    navController: NavController,
+    showBackButton: Boolean = true
+) {
     val configuration = LocalConfiguration.current
     val availableLanguages = listOf(
         LanguageOption("en", R.string.language_english),
@@ -87,17 +91,20 @@ fun SettingsScreen(navController: NavController) {
     val selectedLanguage = availableLanguages.firstOrNull { it.tag == normalizedSelectedTag }
         ?: availableLanguages.first()
     var showLanguageDialog by remember { mutableStateOf(false) }
+    var showProDialog by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxWidth()) {
         TopAppBar(
             title = { Text(stringResource(R.string.settings)) },
             colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface),
             navigationIcon = {
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back)
-                    )
+                if (showBackButton) {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
+                    }
                 }
             }
         )
@@ -108,6 +115,12 @@ fun SettingsScreen(navController: NavController) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            SettingCard(
+                icon = { Icon(Icons.Default.Star, contentDescription = null) },
+                title = stringResource(R.string.pro_purchase_title),
+                subtitle = stringResource(R.string.pro_purchase_subtitle),
+                onClick = { showProDialog = true }
+            )
             SettingCard(
                 icon = { Icon(Icons.Default.Language, contentDescription = null) },
                 title = stringResource(R.string.language),
@@ -170,6 +183,19 @@ fun SettingsScreen(navController: NavController) {
             confirmButton = {
                 TextButton(onClick = { showLanguageDialog = false }) {
                     Text(stringResource(R.string.cancel))
+                }
+            }
+        )
+    }
+
+    if (showProDialog) {
+        AlertDialog(
+            onDismissRequest = { showProDialog = false },
+            title = { Text(stringResource(R.string.pro_purchase_title)) },
+            text = { Text(stringResource(R.string.pro_purchase_placeholder)) },
+            confirmButton = {
+                TextButton(onClick = { showProDialog = false }) {
+                    Text(stringResource(R.string.close))
                 }
             }
         )

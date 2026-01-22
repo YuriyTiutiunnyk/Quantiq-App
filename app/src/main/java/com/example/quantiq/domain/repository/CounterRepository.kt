@@ -9,9 +9,17 @@ import kotlinx.coroutines.flow.Flow
 interface CounterRepository {
     fun observeCounters(): Flow<List<Counter>>
     fun observeCounter(id: Long): Flow<Counter?>
-    suspend fun addCounter(title: String, step: Int, value: Int = 0)
+    suspend fun addCounter(
+        title: String,
+        step: Int,
+        value: Int = 0,
+        isDefault: Boolean = false
+    ): Long
     suspend fun updateCounter(counter: Counter)
     suspend fun updateCounterValue(counter: Counter, delta: Int)
     suspend fun deleteCounter(id: Long)
     suspend fun resetCounter(id: Long)
+    suspend fun getCounter(id: Long): Counter?
+    suspend fun getDefaultCounter(): Counter?
+    suspend fun getCounterCount(): Int
 }

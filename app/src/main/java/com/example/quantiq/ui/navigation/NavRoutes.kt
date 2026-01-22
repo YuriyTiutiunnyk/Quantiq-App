@@ -28,6 +28,7 @@ object NavRoutes {
     private const val UPCOMING_SCHEDULE_BASE = "upcoming_schedule"
 
     const val LIST = "list"
+    const val ACTIVE = "active"
     const val SETTINGS = "settings"
     const val COUNTER_DETAILS = "$DETAILS_BASE/{${NavArguments.COUNTER_ID}}"
     const val GUIDELINES = GUIDELINES_BASE

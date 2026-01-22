@@ -8,5 +8,6 @@ data class Counter(
     val title: String,
     val value: Int = 0,
     val step: Int = 1,
-    val isLocked: Boolean = false
+    val isLocked: Boolean = false,
+    val isDefault: Boolean = false
 )

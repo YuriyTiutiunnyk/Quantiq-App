@@ -9,7 +9,8 @@ fun CounterEntity.toDomain(): Counter =
         title = title,
         value = value,
         step = step,
-        isLocked = isLocked
+        isLocked = isLocked,
+        isDefault = isDefault
     )
 
 fun Counter.toEntity(): CounterEntity =
@@ -18,5 +19,6 @@ fun Counter.toEntity(): CounterEntity =
         title = title,
         value = value,
         step = step,
-        isLocked = isLocked
+        isLocked = isLocked,
+        isDefault = isDefault
     )

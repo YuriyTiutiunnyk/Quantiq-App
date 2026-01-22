@@ -8,7 +8,10 @@ import com.example.quantiq.domain.repository.CounterRepository
 class AddCounterUseCase(
     private val repository: CounterRepository
 ) {
-    suspend operator fun invoke(title: String, step: Int, value: Int = 0) {
-        repository.addCounter(title, step, value)
-    }
+    suspend operator fun invoke(
+        title: String,
+        step: Int,
+        value: Int = 0,
+        isDefault: Boolean = false
+    ): Long = repository.addCounter(title, step, value, isDefault)
 }
