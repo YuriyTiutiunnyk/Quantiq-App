@@ -59,7 +59,7 @@ fun ActiveItemScreen(
     val coroutineScope = rememberCoroutineScope()
     var showStepDialog by remember { mutableStateOf(false) }
     var showCustomStepDialog by remember { mutableStateOf(false) }
-    var showResetAllDialog by remember { mutableStateOf(false) }
+    var showResetItemDialog by remember { mutableStateOf(false) }
     var customStepInput by rememberSaveable(activeCounter?.id) {
         mutableStateOf(activeCounter?.step?.toString().orEmpty())
     }
@@ -171,13 +171,13 @@ fun ActiveItemScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            TextButton(onClick = { showResetAllDialog = true }) {
+            TextButton(onClick = { showResetItemDialog = true }) {
                 Icon(
                     imageVector = Icons.Default.Refresh,
                     contentDescription = null
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(stringResource(R.string.reset_all_items))
+                Text(stringResource(R.string.reset_item))
             }
         }
     }
@@ -256,23 +256,23 @@ fun ActiveItemScreen(
             )
         }
 
-        if (showResetAllDialog) {
+        if (showResetItemDialog) {
             AlertDialog(
-                onDismissRequest = { showResetAllDialog = false },
-                title = { Text(stringResource(R.string.reset_all_title)) },
-                text = { Text(stringResource(R.string.reset_all_body)) },
+                onDismissRequest = { showResetItemDialog = false },
+                title = { Text(stringResource(R.string.reset_item_title)) },
+                text = { Text(stringResource(R.string.reset_item_body)) },
                 confirmButton = {
                     TextButton(
                         onClick = {
-                            viewModel.dispatch(MainIntent.ResetAllCounters)
-                            showResetAllDialog = false
+                            viewModel.dispatch(MainIntent.ResetCounter(activeCounter.id))
+                            showResetItemDialog = false
                         }
                     ) {
-                        Text(stringResource(R.string.reset_all_confirm))
+                        Text(stringResource(R.string.reset_item_confirm))
                     }
                 },
                 dismissButton = {
-                    TextButton(onClick = { showResetAllDialog = false }) {
+                    TextButton(onClick = { showResetItemDialog = false }) {
                         Text(stringResource(R.string.cancel))
                     }
                 }

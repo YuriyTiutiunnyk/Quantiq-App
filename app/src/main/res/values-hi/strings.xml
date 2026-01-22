@@ -100,7 +100,7 @@
     <string name="save">Save</string>
     <string name="reset_all_items">Reset all items</string>
     <string name="reset_all_title">Reset all counters?</string>
-    <string name="reset_all_body">This will set every counter back to zero.</string>
+    <string name="reset_all_body">Are you sure you want to reset all counters? This will set every counter back to zero.</string>
     <string name="reset_all_confirm">Reset all</string>
     <string name="edit_item">Edit item</string>
     <string name="increment_symbol">+</string>
@@ -113,4 +113,9 @@
     <string name="custom_step_invalid">Enter a valid step value.</string>
     <string name="custom_step_pro_message">Custom steps are a PRO feature.</string>
     <string name="upgrade_action">Upgrade</string>
+    <string name="reset_item">Reset item</string>
+    <string name="reset_item_title">Reset this counter?</string>
+    <string name="reset_item_body">Are you sure you want to reset this counter to zero?</string>
+    <string name="reset_item_confirm">Reset item</string>
+    <string name="reset_all_subtitle">Reset every counter back to zero.</string>
 </resources>

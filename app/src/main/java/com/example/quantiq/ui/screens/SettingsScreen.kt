@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,6 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.LocaleListCompat
 import androidx.navigation.NavController
 import com.example.quantiq.R
+import com.example.quantiq.ui.MainIntent
+import com.example.quantiq.ui.MainViewModel
 import com.example.quantiq.ui.navigation.NavRoutes
 import java.util.Locale
 
@@ -69,6 +72,7 @@ private fun languageFlag(tag: String): String {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
+    viewModel: MainViewModel,
     navController: NavController,
     showBackButton: Boolean = true
 ) {
@@ -92,6 +96,7 @@ fun SettingsScreen(
         ?: availableLanguages.first()
     var showLanguageDialog by remember { mutableStateOf(false) }
     var showProDialog by remember { mutableStateOf(false) }
+    var showResetAllDialog by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.fillMaxWidth()) {
         TopAppBar(
@@ -135,6 +140,12 @@ fun SettingsScreen(
                 title = stringResource(R.string.notifications_settings_title),
                 subtitle = stringResource(R.string.notifications_settings_subtitle),
                 onClick = { navController.navigate(NavRoutes.NOTIFICATIONS_SETTINGS) }
+            )
+            SettingCard(
+                icon = { Icon(Icons.Default.Refresh, contentDescription = null) },
+                title = stringResource(R.string.reset_all_items),
+                subtitle = stringResource(R.string.reset_all_subtitle),
+                onClick = { showResetAllDialog = true }
             )
         }
     }
@@ -196,6 +207,29 @@ fun SettingsScreen(
             confirmButton = {
                 TextButton(onClick = { showProDialog = false }) {
                     Text(stringResource(R.string.close))
+                }
+            }
+        )
+    }
+
+    if (showResetAllDialog) {
+        AlertDialog(
+            onDismissRequest = { showResetAllDialog = false },
+            title = { Text(stringResource(R.string.reset_all_title)) },
+            text = { Text(stringResource(R.string.reset_all_body)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.dispatch(MainIntent.ResetAllCounters)
+                        showResetAllDialog = false
+                    }
+                ) {
+                    Text(stringResource(R.string.reset_all_confirm))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showResetAllDialog = false }) {
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )

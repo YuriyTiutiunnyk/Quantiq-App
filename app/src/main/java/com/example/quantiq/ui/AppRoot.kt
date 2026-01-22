@@ -161,7 +161,11 @@ fun AppRoot(
                     )
                 }
                 composable(NavRoutes.SETTINGS) {
-                    SettingsScreen(navController = navController, showBackButton = false)
+                    SettingsScreen(
+                        viewModel = mainViewModel,
+                        navController = navController,
+                        showBackButton = false
+                    )
                 }
                 composable(NavRoutes.NOTIFICATIONS_SETTINGS) {
                     val settingsViewModel: NotificationsSettingsViewModel = viewModel(
