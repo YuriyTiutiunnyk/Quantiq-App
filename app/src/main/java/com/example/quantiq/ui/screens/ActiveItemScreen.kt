@@ -203,7 +203,13 @@ fun ActiveItemScreen(
                                 actionLabel = stringResource(R.string.upgrade_action)
                             )
                             if (result == androidx.compose.material3.SnackbarResult.ActionPerformed) {
-                                navController.navigate(NavRoutes.SETTINGS)
+                                navController.navigate(NavRoutes.SETTINGS) {
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
                             }
                         }
                     }
