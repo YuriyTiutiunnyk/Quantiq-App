@@ -1,11 +1,11 @@
 package com.example.quantiq.ui.components
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -94,10 +95,12 @@ fun ConvexBottomBar(
                     top = tokens.verticalPadding,
                     bottom = tokens.verticalPadding + bottomInset
                 ),
-            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            sideItems.forEach { item ->
+            val leftItem = sideItems.firstOrNull()
+            val rightItem = sideItems.lastOrNull().takeIf { sideItems.size > 1 }
+
+            leftItem?.let { item ->
                 BottomBarButton(
                     selected = currentRoute == item.route,
                     label = item.label,
@@ -106,7 +109,24 @@ fun ConvexBottomBar(
                     unselectedColor = unselectedColor,
                     iconSize = tokens.iconSize,
                     labelStyle = labelStyle,
-                    onClick = { onNavigate(item.route) }
+                    onClick = { onNavigate(item.route) },
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(tokens.centerGapWidth))
+
+            rightItem?.let { item ->
+                BottomBarButton(
+                    selected = currentRoute == item.route,
+                    label = item.label,
+                    icon = item.icon,
+                    selectedColor = selectedColor,
+                    unselectedColor = unselectedColor,
+                    iconSize = tokens.iconSize,
+                    labelStyle = labelStyle,
+                    onClick = { onNavigate(item.route) },
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
@@ -161,7 +181,8 @@ data class ConvexBottomBarTokens(
     val centerButtonSize: Dp = 72.dp,
     val centerIconSize: Dp = 28.dp,
     val centerButtonShadowElevation: Dp = 10.dp,
-    val centerButtonTonalElevation: Dp = 6.dp
+    val centerButtonTonalElevation: Dp = 6.dp,
+    val centerGapWidth: Dp = 96.dp
 )
 
 /**
@@ -250,10 +271,15 @@ private fun BottomBarButton(
     unselectedColor: Color,
     iconSize: Dp,
     labelStyle: TextStyle,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val contentColor = if (selected) selectedColor else unselectedColor
-    TextButton(onClick = onClick, contentPadding = PaddingValues(0.dp)) {
+    TextButton(
+        onClick = onClick,
+        contentPadding = PaddingValues(0.dp),
+        modifier = modifier
+    ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(
                 icon,
