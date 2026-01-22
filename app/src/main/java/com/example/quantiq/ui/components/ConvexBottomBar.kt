@@ -1,9 +1,7 @@
 package com.example.quantiq.ui.components
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -12,7 +10,6 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateBottomPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -24,33 +21,21 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Paint
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.PathFillType
-import androidx.compose.ui.graphics.drawscope.Fill
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 /**
- * Renders a curved/convex styled bottom navigation bar with a raised center action.
+ * Renders a floating bottom navigation bar with three circular actions.
  *
- * TODO: Confirm bar height, corner radius, notch radius/depth, icon size, typography, and colors
- *  from navbar.fig/elements.fig/download.fig exports once available.
+ * TODO: Confirm button sizes, spacing, typography, and colors from navbar.fig/elements.fig
+ *  exports once available.
  */
 @Composable
 fun ConvexBottomBar(
@@ -62,32 +47,20 @@ fun ConvexBottomBar(
 ) {
     val centerItem = items.firstOrNull { it.position == BottomBarItemPosition.Center }
     val sideItems = items.filter { it.position != BottomBarItemPosition.Center }
-    val barColor = MaterialTheme.colorScheme.surface
     val selectedColor = MaterialTheme.colorScheme.primary
     val unselectedColor = MaterialTheme.colorScheme.onSurfaceVariant
-    val centerSelectedColor = MaterialTheme.colorScheme.primaryContainer
-    val centerUnselectedColor = MaterialTheme.colorScheme.surface
-    val centerSelectedContent = MaterialTheme.colorScheme.onPrimaryContainer
-    val centerUnselectedContent = MaterialTheme.colorScheme.onSurface
+    val buttonContainerColor = MaterialTheme.colorScheme.surface
     val labelStyle = MaterialTheme.typography.labelMedium
     val bottomInset = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .clipToBounds(false)
             .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
     ) {
-        ConvexBottomBarBackground(
-            barColor = barColor,
-            tokens = tokens,
-            bottomInset = bottomInset
-        )
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(tokens.barHeight)
                 .align(Alignment.BottomCenter)
                 .padding(
                     start = tokens.horizontalPadding,
@@ -95,7 +68,7 @@ fun ConvexBottomBar(
                     top = tokens.verticalPadding,
                     bottom = tokens.verticalPadding + bottomInset
                 ),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.Bottom
         ) {
             val leftItem = sideItems.firstOrNull()
             val rightItem = sideItems.lastOrNull().takeIf { sideItems.size > 1 }
@@ -107,7 +80,11 @@ fun ConvexBottomBar(
                     icon = item.icon,
                     selectedColor = selectedColor,
                     unselectedColor = unselectedColor,
-                    iconSize = tokens.iconSize,
+                    iconSize = tokens.sideIconSize,
+                    buttonSize = tokens.sideButtonSize,
+                    buttonContainerColor = buttonContainerColor,
+                    shadowElevation = tokens.buttonShadowElevation,
+                    tonalElevation = tokens.buttonTonalElevation,
                     labelStyle = labelStyle,
                     onClick = { onNavigate(item.route) },
                     modifier = Modifier.weight(1f)
@@ -123,7 +100,11 @@ fun ConvexBottomBar(
                     icon = item.icon,
                     selectedColor = selectedColor,
                     unselectedColor = unselectedColor,
-                    iconSize = tokens.iconSize,
+                    iconSize = tokens.sideIconSize,
+                    buttonSize = tokens.sideButtonSize,
+                    buttonContainerColor = buttonContainerColor,
+                    shadowElevation = tokens.buttonShadowElevation,
+                    tonalElevation = tokens.buttonTonalElevation,
                     labelStyle = labelStyle,
                     onClick = { onNavigate(item.route) },
                     modifier = Modifier.weight(1f)
@@ -135,30 +116,25 @@ fun ConvexBottomBar(
             val isSelected = currentRoute == item.route
             Surface(
                 modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .offset(y = -(tokens.centerButtonSize / 2 + tokens.notchDepth / 2)),
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = bottomInset + tokens.verticalPadding),
                 shape = CircleShape,
-                color = if (isSelected) centerSelectedColor else centerUnselectedColor,
-                shadowElevation = tokens.centerButtonShadowElevation,
-                tonalElevation = tokens.centerButtonTonalElevation
+                color = buttonContainerColor,
+                shadowElevation = tokens.buttonShadowElevation,
+                tonalElevation = tokens.buttonTonalElevation,
+                onClick = { onNavigate(item.route) }
             ) {
-                ElevatedCircleButton(
-                    onClick = { onNavigate(item.route) },
-                    size = tokens.centerButtonSize,
-                    content = {
-                        val contentColor = if (isSelected) {
-                            centerSelectedContent
-                        } else {
-                            centerUnselectedContent
-                        }
-                        Icon(
-                            item.icon,
-                            contentDescription = item.label,
-                            tint = contentColor,
-                            modifier = Modifier.size(tokens.centerIconSize)
-                        )
-                    }
-                )
+                Box(
+                    modifier = Modifier.size(tokens.centerButtonSize),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        item.icon,
+                        contentDescription = item.label,
+                        tint = if (isSelected) selectedColor else unselectedColor,
+                        modifier = Modifier.size(tokens.centerIconSize)
+                    )
+                }
             }
         }
     }
@@ -169,79 +145,16 @@ fun ConvexBottomBar(
  */
 @Immutable
 data class ConvexBottomBarTokens(
-    val barHeight: Dp = 72.dp,
     val horizontalPadding: Dp = 32.dp,
     val verticalPadding: Dp = 12.dp,
-    val cornerRadius: Dp = 28.dp,
-    val notchRadius: Dp = 40.dp,
-    val notchDepth: Dp = 24.dp,
-    val shadowBlurRadius: Dp = 20.dp,
-    val shadowOffsetY: Dp = 6.dp,
-    val iconSize: Dp = 22.dp,
+    val sideButtonSize: Dp = 56.dp,
+    val sideIconSize: Dp = 22.dp,
     val centerButtonSize: Dp = 72.dp,
     val centerIconSize: Dp = 28.dp,
-    val centerButtonShadowElevation: Dp = 10.dp,
-    val centerButtonTonalElevation: Dp = 6.dp,
-    val centerGapWidth: Dp = 96.dp
+    val buttonShadowElevation: Dp = 10.dp,
+    val buttonTonalElevation: Dp = 4.dp,
+    val centerGapWidth: Dp = 72.dp
 )
-
-/**
- * Draws the curved bottom bar background with a concave notch for the center button.
- */
-@Composable
-private fun ConvexBottomBarBackground(
-    barColor: Color,
-    tokens: ConvexBottomBarTokens,
-    bottomInset: Dp
-) {
-    Canvas(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(tokens.barHeight + bottomInset)
-    ) {
-        val barHeightPx = size.height
-        val cornerRadiusPx = tokens.cornerRadius.toPx()
-        val notchRadiusPx = tokens.notchRadius.toPx()
-        val notchDepthPx = tokens.notchDepth.toPx()
-        val notchCenter = Offset(
-            x = size.width / 2f,
-            y = -notchRadiusPx + notchDepthPx
-        )
-        val barRect = Rect(0f, 0f, size.width, barHeightPx)
-        val barPath = Path().apply {
-            fillType = PathFillType.EvenOdd
-            addRoundRect(
-                RoundRect(
-                    rect = barRect,
-                    cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx)
-                )
-            )
-            addOval(
-                Rect(
-                    left = notchCenter.x - notchRadiusPx,
-                    top = notchCenter.y - notchRadiusPx,
-                    right = notchCenter.x + notchRadiusPx,
-                    bottom = notchCenter.y + notchRadiusPx
-                )
-            )
-        }
-
-        drawIntoCanvas { canvas ->
-            val shadowPaint = Paint().apply {
-                color = barColor
-                val frameworkPaint = asFrameworkPaint()
-                frameworkPaint.setShadowLayer(
-                    tokens.shadowBlurRadius.toPx(),
-                    0f,
-                    tokens.shadowOffsetY.toPx(),
-                    Color.Black.copy(alpha = 0.18f).toArgb()
-                )
-            }
-            canvas.drawPath(barPath, shadowPaint)
-        }
-        drawPath(path = barPath, color = barColor, style = Fill)
-    }
-}
 
 /**
  * Defines a bottom bar destination slot.
@@ -270,24 +183,39 @@ private fun BottomBarButton(
     selectedColor: Color,
     unselectedColor: Color,
     iconSize: Dp,
+    buttonSize: Dp,
+    buttonContainerColor: Color,
+    shadowElevation: Dp,
+    tonalElevation: Dp,
     labelStyle: TextStyle,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val contentColor = if (selected) selectedColor else unselectedColor
-    TextButton(
-        onClick = onClick,
-        contentPadding = PaddingValues(0.dp),
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(
-                icon,
-                contentDescription = label,
-                tint = contentColor,
-                modifier = Modifier.size(iconSize)
-            )
-            Text(text = label, color = contentColor, style = labelStyle)
+        Surface(
+            onClick = onClick,
+            shape = CircleShape,
+            color = buttonContainerColor,
+            shadowElevation = shadowElevation,
+            tonalElevation = tonalElevation
+        ) {
+            Box(
+                modifier = Modifier.size(buttonSize),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    icon,
+                    contentDescription = label,
+                    tint = contentColor,
+                    modifier = Modifier.size(iconSize)
+                )
+            }
         }
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(text = label, color = contentColor, style = labelStyle)
     }
 }
