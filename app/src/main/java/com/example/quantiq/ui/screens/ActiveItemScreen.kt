@@ -9,7 +9,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -35,6 +40,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -80,44 +86,86 @@ fun ActiveItemScreen(
             return@Scaffold
         }
 
-        Column(
+        Box(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .padding(horizontal = 24.dp, vertical = 20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = activeCounter.title,
-                    style = MaterialTheme.typography.headlineSmall
-                )
-                IconButton(
-                    onClick = {
-                        navController.navigate(NavRoutes.counterDetails(activeCounter.id)) {
-                            launchSingleTop = true
+            Row(modifier = Modifier.fillMaxSize()) {
+                val interactionSource = remember { MutableInteractionSource() }
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxSize()
+                        .clickable(
+                            interactionSource = interactionSource,
+                            indication = null
+                        ) {
+                            viewModel.dispatch(
+                                MainIntent.UpdateCounterValue(activeCounter, -activeCounter.step)
+                            )
                         }
-                    },
-                    modifier = Modifier.align(Alignment.CenterEnd)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = stringResource(R.string.edit_item)
-                    )
-                }
+                )
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxSize()
+                        .clickable(
+                            interactionSource = interactionSource,
+                            indication = null
+                        ) {
+                            viewModel.dispatch(
+                                MainIntent.UpdateCounterValue(activeCounter, activeCounter.step)
+                            )
+                        }
+                )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp, vertical = 20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = activeCounter.title,
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                    IconButton(
+                        onClick = {
+                            navController.navigate(NavRoutes.counterDetails(activeCounter.id)) {
+                                launchSingleTop = true
+                            }
+                        },
+                        modifier = Modifier.align(Alignment.CenterEnd)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = stringResource(R.string.edit_item)
+                        )
+                    }
+                }
 
-            Text(
-                text = activeCounter.value.toString(),
-                style = MaterialTheme.typography.displayLarge
-            )
+                Spacer(modifier = Modifier.height(32.dp))
 
-            Spacer(modifier = Modifier.height(32.dp))
+                Box(
+                    modifier = Modifier
+                        .size(180.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = activeCounter.value.toString(),
+                        style = MaterialTheme.typography.displayLarge
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(24.dp),
@@ -178,6 +226,7 @@ fun ActiveItemScreen(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(stringResource(R.string.reset_item))
+            }
             }
         }
     }
