@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -44,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -74,6 +74,11 @@ fun ActiveItemScreen(
         mutableStateOf(activeCounter?.step?.toString().orEmpty())
     }
     val counterPulse = remember { Animatable(1f) }
+    val mainButtonSize = 84.dp
+    val stepButtonSize = mainButtonSize * 0.7f
+    val resetButtonSize = mainButtonSize * 0.3f
+    val decrementColor = Color(0xFFFFE1E1)
+    val incrementColor = Color(0xFFDDF4E3)
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -96,6 +101,53 @@ fun ActiveItemScreen(
                 .padding(padding)
                 .fillMaxSize()
         ) {
+            Row(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxSize()
+                        .background(decrementColor)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            viewModel.dispatch(
+                                MainIntent.UpdateCounterValue(activeCounter, -activeCounter.step)
+                            )
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(R.string.decrement_symbol),
+                        style = MaterialTheme.typography.displayMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxSize()
+                        .background(incrementColor)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            viewModel.dispatch(
+                                MainIntent.UpdateCounterValue(activeCounter, activeCounter.step)
+                            )
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(R.string.increment_symbol),
+                        style = MaterialTheme.typography.displayMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+                    )
+                }
+            }
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -127,7 +179,6 @@ fun ActiveItemScreen(
                 Spacer(modifier = Modifier.weight(1f))
             }
 
-            val interactionSource = remember { MutableInteractionSource() }
             Box(
                 modifier = Modifier
                     .align(Alignment.Center)
@@ -139,7 +190,7 @@ fun ActiveItemScreen(
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.surfaceVariant)
                     .clickable(
-                        interactionSource = interactionSource,
+                        interactionSource = remember { MutableInteractionSource() },
                         indication = null
                     ) {
                         viewModel.dispatch(
@@ -161,26 +212,24 @@ fun ActiveItemScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Bottom
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(24.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     ElevatedCircleButton(
-                        onClick = {
-                            viewModel.dispatch(
-                                MainIntent.UpdateCounterValue(activeCounter, -activeCounter.step)
-                            )
-                        },
-                        size = 72.dp
+                        onClick = { showResetItemDialog = true },
+                        size = resetButtonSize,
+                        tonalElevation = 6.dp,
+                        shadowElevation = 8.dp
                     ) {
-                        Text(
-                            text = stringResource(R.string.decrement_symbol),
-                            style = MaterialTheme.typography.headlineMedium
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = stringResource(R.string.reset_item)
                         )
                     }
                     ElevatedCircleButton(
                         onClick = { showStepDialog = true },
-                        size = 80.dp,
+                        size = stepButtonSize,
                         tonalElevation = 6.dp,
                         shadowElevation = 8.dp
                     ) {
@@ -196,30 +245,6 @@ fun ActiveItemScreen(
                             )
                         }
                     }
-                    ElevatedCircleButton(
-                        onClick = {
-                            viewModel.dispatch(
-                                MainIntent.UpdateCounterValue(activeCounter, activeCounter.step)
-                            )
-                        },
-                        size = 72.dp
-                    ) {
-                        Text(
-                            text = stringResource(R.string.increment_symbol),
-                            style = MaterialTheme.typography.headlineMedium
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                TextButton(onClick = { showResetItemDialog = true }) {
-                    Icon(
-                        imageVector = Icons.Default.Refresh,
-                        contentDescription = null
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(stringResource(R.string.reset_item))
                 }
             }
         }
