@@ -1,6 +1,7 @@
 package com.example.quantiq.ui
 
 import android.view.View
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.List
@@ -88,6 +89,7 @@ fun AppRoot(
         }
 
         Scaffold(
+            contentWindowInsets = WindowInsets(0),
             bottomBar = {
                 if (showBottomBar) {
                     ConvexBottomBar(
