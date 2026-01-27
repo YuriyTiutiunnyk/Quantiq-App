@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.view.WindowCompat
 import com.example.quantiq.QuantiqApplication
 import com.example.quantiq.ui.settings.notifications.NotificationDetailsViewModelFactory
 import com.example.quantiq.ui.settings.notifications.NotificationsSettingsViewModel
@@ -25,6 +26,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         val appContainer = (application as QuantiqApplication).appContainer
         appContainer.billingManager.startConnection()
