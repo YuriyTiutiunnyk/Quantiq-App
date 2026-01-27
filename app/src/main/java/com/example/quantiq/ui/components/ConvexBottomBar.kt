@@ -117,7 +117,7 @@ fun ConvexBottomBar(
             Surface(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(bottom = bottomInset + tokens.verticalPadding),
+                    .padding(bottom = bottomInset + tokens.verticalPadding + tokens.centerButtonLift),
                 shape = CircleShape,
                 color = buttonContainerColor,
                 shadowElevation = tokens.buttonShadowElevation,
@@ -149,11 +149,12 @@ data class ConvexBottomBarTokens(
     val verticalPadding: Dp = 12.dp,
     val sideButtonSize: Dp = 56.dp,
     val sideIconSize: Dp = 22.dp,
-    val centerButtonSize: Dp = 72.dp,
-    val centerIconSize: Dp = 28.dp,
+    val centerButtonSize: Dp = 84.dp,
+    val centerIconSize: Dp = 32.dp,
+    val centerButtonLift: Dp = 12.dp,
     val buttonShadowElevation: Dp = 10.dp,
     val buttonTonalElevation: Dp = 4.dp,
-    val centerGapWidth: Dp = 72.dp
+    val centerGapWidth: Dp = 84.dp
 )
 
 /**
