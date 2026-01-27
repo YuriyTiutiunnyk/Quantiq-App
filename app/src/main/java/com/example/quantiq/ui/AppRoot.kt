@@ -1,6 +1,7 @@
 package com.example.quantiq.ui
 
 import android.view.View
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -15,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -127,10 +129,20 @@ fun AppRoot(
                 }
             }
         ) { padding ->
+            val contentPadding = if (currentRoute == NavRoutes.ACTIVE) {
+                PaddingValues(
+                    start = padding.calculateStartPadding(layoutDirection),
+                    top = padding.calculateTopPadding(),
+                    end = padding.calculateEndPadding(layoutDirection),
+                    bottom = 0.dp
+                )
+            } else {
+                padding
+            }
             NavHost(
                 navController = navController,
                 startDestination = NavRoutes.LIST,
-                modifier = androidx.compose.ui.Modifier.padding(padding)
+                modifier = androidx.compose.ui.Modifier.padding(contentPadding)
             ) {
                 composable(NavRoutes.LIST) {
                     ListScreen(viewModel = mainViewModel, navController = navController)
