@@ -16,6 +16,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Refresh
@@ -33,6 +35,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -41,6 +44,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -69,6 +73,7 @@ fun ActiveItemScreen(
     var customStepInput by rememberSaveable(activeCounter?.id) {
         mutableStateOf(activeCounter?.step?.toString().orEmpty())
     }
+    val counterPulse = remember { Animatable(1f) }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -91,36 +96,6 @@ fun ActiveItemScreen(
                 .padding(padding)
                 .fillMaxSize()
         ) {
-            Row(modifier = Modifier.fillMaxSize()) {
-                val interactionSource = remember { MutableInteractionSource() }
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxSize()
-                        .clickable(
-                            interactionSource = interactionSource,
-                            indication = null
-                        ) {
-                            viewModel.dispatch(
-                                MainIntent.UpdateCounterValue(activeCounter, -activeCounter.step)
-                            )
-                        }
-                )
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxSize()
-                        .clickable(
-                            interactionSource = interactionSource,
-                            indication = null
-                        ) {
-                            viewModel.dispatch(
-                                MainIntent.UpdateCounterValue(activeCounter, activeCounter.step)
-                            )
-                        }
-                )
-            }
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -149,86 +124,117 @@ fun ActiveItemScreen(
                         )
                     }
                 }
+                Spacer(modifier = Modifier.weight(1f))
+            }
 
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Box(
-                    modifier = Modifier
-                        .size(180.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.surfaceVariant),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = activeCounter.value.toString(),
-                        style = MaterialTheme.typography.displayLarge
+            val interactionSource = remember { MutableInteractionSource() }
+            Box(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .size(180.dp)
+                    .graphicsLayer(
+                        scaleX = counterPulse.value,
+                        scaleY = counterPulse.value
                     )
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(24.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                ElevatedCircleButton(
-                    onClick = {
-                        viewModel.dispatch(
-                            MainIntent.UpdateCounterValue(activeCounter, -activeCounter.step)
-                        )
-                    },
-                    size = 72.dp
-                ) {
-                    Text(
-                        text = stringResource(R.string.decrement_symbol),
-                        style = MaterialTheme.typography.headlineMedium
-                    )
-                }
-                ElevatedCircleButton(
-                    onClick = { showStepDialog = true },
-                    size = 80.dp,
-                    tonalElevation = 6.dp,
-                    shadowElevation = 8.dp
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = stringResource(R.string.step_label),
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            text = activeCounter.step.toString(),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }
-                }
-                ElevatedCircleButton(
-                    onClick = {
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .clickable(
+                        interactionSource = interactionSource,
+                        indication = null
+                    ) {
                         viewModel.dispatch(
                             MainIntent.UpdateCounterValue(activeCounter, activeCounter.step)
                         )
                     },
-                    size = 72.dp
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = activeCounter.value.toString(),
+                    style = MaterialTheme.typography.displayLarge
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp, vertical = 20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Bottom
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(24.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = stringResource(R.string.increment_symbol),
-                        style = MaterialTheme.typography.headlineMedium
+                    ElevatedCircleButton(
+                        onClick = {
+                            viewModel.dispatch(
+                                MainIntent.UpdateCounterValue(activeCounter, -activeCounter.step)
+                            )
+                        },
+                        size = 72.dp
+                    ) {
+                        Text(
+                            text = stringResource(R.string.decrement_symbol),
+                            style = MaterialTheme.typography.headlineMedium
+                        )
+                    }
+                    ElevatedCircleButton(
+                        onClick = { showStepDialog = true },
+                        size = 80.dp,
+                        tonalElevation = 6.dp,
+                        shadowElevation = 8.dp
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                text = stringResource(R.string.step_label),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            Text(
+                                text = activeCounter.step.toString(),
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                        }
+                    }
+                    ElevatedCircleButton(
+                        onClick = {
+                            viewModel.dispatch(
+                                MainIntent.UpdateCounterValue(activeCounter, activeCounter.step)
+                            )
+                        },
+                        size = 72.dp
+                    ) {
+                        Text(
+                            text = stringResource(R.string.increment_symbol),
+                            style = MaterialTheme.typography.headlineMedium
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                TextButton(onClick = { showResetItemDialog = true }) {
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = null
                     )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(stringResource(R.string.reset_item))
                 }
             }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            TextButton(onClick = { showResetItemDialog = true }) {
-                Icon(
-                    imageVector = Icons.Default.Refresh,
-                    contentDescription = null
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(stringResource(R.string.reset_item))
-            }
-            }
         }
+    }
+
+    LaunchedEffect(activeCounter?.value) {
+        counterPulse.snapTo(1f)
+        counterPulse.animateTo(
+            targetValue = 1.08f,
+            animationSpec = tween(durationMillis = 140)
+        )
+        counterPulse.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(durationMillis = 160)
+        )
     }
 
     if (activeCounter != null) {
