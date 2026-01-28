@@ -1,6 +1,5 @@
 package com.example.quantiq.ui.screens
 
-import android.animation.ValueAnimator
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -53,6 +52,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -65,6 +65,7 @@ import com.example.quantiq.ui.MainViewModel
 import com.example.quantiq.ui.components.design.CircularIconButton
 import com.example.quantiq.ui.navigation.NavRoutes
 import kotlinx.coroutines.launch
+import android.provider.Settings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -444,7 +445,16 @@ internal fun CounterActionMenu(
     actionShadowInset: Dp,
     modifier: Modifier = Modifier
 ) {
-    val reduceMotion = !ValueAnimator.areAnimatorsEnabled()
+    val context = LocalContext.current
+    val reduceMotion = remember(context) {
+        val resolver = context.contentResolver
+        runCatching {
+            Settings.Global.getFloat(
+                resolver,
+                Settings.Global.ANIMATOR_DURATION_SCALE
+            ) == 0f
+        }.getOrDefault(false)
+    }
     val shadowPadding = 8.dp
     val enterTransition = if (reduceMotion) {
         fadeIn(animationSpec = tween(durationMillis = 150))
