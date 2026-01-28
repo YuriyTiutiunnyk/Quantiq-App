@@ -16,7 +16,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -76,7 +75,6 @@ fun ActiveItemScreen(
     var showCustomStepDialog by remember { mutableStateOf(false) }
     var showResetItemDialog by remember { mutableStateOf(false) }
     var showActionMenu by remember { mutableStateOf(false) }
-    val actionMenuState = remember { MutableTransitionState(false) }
     var customStepInput by rememberSaveable(activeCounter?.id) {
         mutableStateOf(activeCounter?.step?.toString().orEmpty())
     }
@@ -85,11 +83,9 @@ fun ActiveItemScreen(
     val actionIconSize = 22.dp
     val actionButtonShadow = 10.dp
     val actionButtonTonal = 4.dp
+    val actionShadowInset = 10.dp
     val decrementColor = Color(0xFFFFE1E1)
     val incrementColor = Color(0xFFDDF4E3)
-
-    actionMenuState.targetState = showActionMenu
-    val isActionMenuAnimating = !actionMenuState.isIdle
 
     Scaffold(
         contentWindowInsets = WindowInsets(0),
@@ -218,64 +214,70 @@ fun ActiveItemScreen(
                     size = actionButtonSize,
                     iconSize = actionIconSize
                 )
-                AnimatedVisibility(
-                    visibleState = actionMenuState,
-                    enter = fadeIn(animationSpec = tween(durationMillis = 220)) +
-                        expandVertically(
-                            expandFrom = Alignment.Top,
-                            animationSpec = tween(durationMillis = 240),
-                            clip = false
-                        ),
-                    exit = fadeOut(animationSpec = tween(durationMillis = 180)) +
-                        shrinkVertically(
-                            shrinkTowards = Alignment.Top,
-                            animationSpec = tween(durationMillis = 200),
-                            clip = false
-                        )
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = actionShadowInset, vertical = actionShadowInset)
+                        .graphicsLayer { clip = false }
                 ) {
-                    Column(
-                        modifier = Modifier.graphicsLayer { clip = false },
-                        horizontalAlignment = Alignment.End,
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    AnimatedVisibility(
+                        visible = showActionMenu,
+                        enter = fadeIn(animationSpec = tween(durationMillis = 220)) +
+                            expandVertically(
+                                expandFrom = Alignment.Top,
+                                animationSpec = tween(durationMillis = 240),
+                                clip = false
+                            ),
+                        exit = fadeOut(animationSpec = tween(durationMillis = 180)) +
+                            shrinkVertically(
+                                shrinkTowards = Alignment.Top,
+                                animationSpec = tween(durationMillis = 200),
+                                clip = false
+                            )
                     ) {
-                        CircularIconButton(
-                            icon = Icons.Default.Edit,
-                            contentDescription = stringResource(R.string.open_details),
-                            onClick = {
-                                showActionMenu = false
-                                navController.navigate(NavRoutes.counterDetails(activeCounter.id)) {
-                                    launchSingleTop = true
-                                }
-                            },
-                            size = actionButtonSize,
-                            iconSize = actionIconSize,
-                            shadowElevation = if (isActionMenuAnimating) 0.dp else actionButtonShadow,
-                            tonalElevation = actionButtonTonal
-                        )
-                        CircularIconButton(
-                            icon = Icons.Default.Refresh,
-                            contentDescription = stringResource(R.string.reset_item),
-                            onClick = {
-                                showActionMenu = false
-                                showResetItemDialog = true
-                            },
-                            size = actionButtonSize,
-                            iconSize = actionIconSize,
-                            shadowElevation = if (isActionMenuAnimating) 0.dp else actionButtonShadow,
-                            tonalElevation = actionButtonTonal
-                        )
-                        CircularIconButton(
-                            icon = Icons.Default.Tune,
-                            contentDescription = stringResource(R.string.step_label),
-                            onClick = {
-                                showActionMenu = false
-                                showStepDialog = true
-                            },
-                            size = actionButtonSize,
-                            iconSize = actionIconSize,
-                            shadowElevation = if (isActionMenuAnimating) 0.dp else actionButtonShadow,
-                            tonalElevation = actionButtonTonal
-                        )
+                        Column(
+                            modifier = Modifier.graphicsLayer { clip = false },
+                            horizontalAlignment = Alignment.End,
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            CircularIconButton(
+                                icon = Icons.Default.Edit,
+                                contentDescription = stringResource(R.string.open_details),
+                                onClick = {
+                                    showActionMenu = false
+                                    navController.navigate(NavRoutes.counterDetails(activeCounter.id)) {
+                                        launchSingleTop = true
+                                    }
+                                },
+                                size = actionButtonSize,
+                                iconSize = actionIconSize,
+                                shadowElevation = actionButtonShadow,
+                                tonalElevation = actionButtonTonal
+                            )
+                            CircularIconButton(
+                                icon = Icons.Default.Refresh,
+                                contentDescription = stringResource(R.string.reset_item),
+                                onClick = {
+                                    showActionMenu = false
+                                    showResetItemDialog = true
+                                },
+                                size = actionButtonSize,
+                                iconSize = actionIconSize,
+                                shadowElevation = actionButtonShadow,
+                                tonalElevation = actionButtonTonal
+                            )
+                            CircularIconButton(
+                                icon = Icons.Default.Tune,
+                                contentDescription = stringResource(R.string.step_label),
+                                onClick = {
+                                    showActionMenu = false
+                                    showStepDialog = true
+                                },
+                                size = actionButtonSize,
+                                iconSize = actionIconSize,
+                                shadowElevation = actionButtonShadow,
+                                tonalElevation = actionButtonTonal
+                            )
+                        }
                     }
                 }
             }
