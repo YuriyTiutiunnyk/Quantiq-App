@@ -201,7 +201,7 @@ fun ActiveItemScreen(
             Column(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(horizontal = 24.dp, vertical = 20.dp),
+                    .padding(horizontal = 24.dp, vertical = 44.dp),
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
@@ -214,16 +214,16 @@ fun ActiveItemScreen(
                 )
                 AnimatedVisibility(
                     visible = showActionMenu,
-                    enter = fadeIn(animationSpec = tween(durationMillis = 220)) +
+                    enter = fadeIn(animationSpec = tween(durationMillis = 520)) +
                         expandVertically(
                             expandFrom = Alignment.Top,
-                            animationSpec = tween(durationMillis = 240),
+                            animationSpec = tween(durationMillis = 540),
                             clip = false
                         ),
-                    exit = fadeOut(animationSpec = tween(durationMillis = 180)) +
+                    exit = fadeOut(animationSpec = tween(durationMillis = 580)) +
                         shrinkVertically(
                             shrinkTowards = Alignment.Top,
-                            animationSpec = tween(durationMillis = 200),
+                            animationSpec = tween(durationMillis = 500),
                             clip = false
                         )
                 ) {
