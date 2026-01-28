@@ -1,8 +1,8 @@
 package com.example.quantiq.ui.screens
 
+import android.animation.ValueAnimator
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.LocalMotionDurationScale
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -444,8 +444,7 @@ internal fun CounterActionMenu(
     actionShadowInset: Dp,
     modifier: Modifier = Modifier
 ) {
-    val motionScale = LocalMotionDurationScale.current
-    val reduceMotion = motionScale == 0f
+    val reduceMotion = !ValueAnimator.areAnimatorsEnabled()
     val shadowPadding = 8.dp
     val enterTransition = if (reduceMotion) {
         fadeIn(animationSpec = tween(durationMillis = 150))
@@ -537,4 +536,3 @@ internal fun CounterActionMenu(
         }
     }
 }
-import androidx.compose.animation.core.LocalMotionDurationScale
