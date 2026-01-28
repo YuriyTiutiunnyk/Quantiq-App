@@ -24,7 +24,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material.icons.filled.MoreVert
@@ -53,6 +52,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
@@ -64,6 +65,7 @@ import com.example.quantiq.ui.MainViewModel
 import com.example.quantiq.ui.components.design.CircularIconButton
 import com.example.quantiq.ui.navigation.NavRoutes
 import kotlinx.coroutines.launch
+import android.provider.Settings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -430,7 +432,7 @@ private fun CounterValueCircle(
 }
 
 @Composable
-private fun CounterActionMenu(
+internal fun CounterActionMenu(
     expanded: Boolean,
     onToggle: () -> Unit,
     onDetails: () -> Unit,
@@ -443,9 +445,44 @@ private fun CounterActionMenu(
     actionShadowInset: Dp,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val reduceMotion = remember(context) {
+        val resolver = context.contentResolver
+        runCatching {
+            Settings.Global.getFloat(
+                resolver,
+                Settings.Global.ANIMATOR_DURATION_SCALE
+            ) == 0f
+        }.getOrDefault(false)
+    }
+    val shadowPadding = 8.dp
+    val enterTransition = if (reduceMotion) {
+        fadeIn(animationSpec = tween(durationMillis = 150))
+    } else {
+        fadeIn(animationSpec = tween(durationMillis = 220)) +
+            expandVertically(
+                expandFrom = Alignment.Top,
+                animationSpec = tween(durationMillis = 240),
+                clip = false
+            )
+    }
+    val exitTransition = if (reduceMotion) {
+        fadeOut(animationSpec = tween(durationMillis = 150))
+    } else {
+        fadeOut(animationSpec = tween(durationMillis = 180)) +
+            shrinkVertically(
+                shrinkTowards = Alignment.Top,
+                animationSpec = tween(durationMillis = 200),
+                clip = false
+            )
+    }
+
     Column(
         modifier = modifier
-            .padding(horizontal = 24.dp, vertical = 20.dp),
+            .padding(horizontal = 24.dp, vertical = 20.dp)
+            .padding(end = shadowPadding, top = shadowPadding, bottom = shadowPadding)
+            .graphicsLayer { clip = false }
+            .testTag("active_action_menu_container"),
         horizontalAlignment = Alignment.End,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -454,7 +491,8 @@ private fun CounterActionMenu(
             contentDescription = stringResource(R.string.open_details),
             onClick = onToggle,
             size = actionButtonSize,
-            iconSize = actionIconSize
+            iconSize = actionIconSize,
+            modifier = Modifier.testTag("active_action_menu_toggle")
         )
         Box(
             modifier = Modifier
@@ -465,18 +503,8 @@ private fun CounterActionMenu(
         ) {
             this@Column.AnimatedVisibility(
                 visible = expanded,
-                enter = fadeIn(animationSpec = tween(durationMillis = 220)) +
-                        expandVertically(
-                            expandFrom = Alignment.Top,
-                            animationSpec = tween(durationMillis = 240),
-                            clip = false
-                        ),
-                exit = fadeOut(animationSpec = tween(durationMillis = 180)) +
-                        shrinkVertically(
-                            shrinkTowards = Alignment.Top,
-                            animationSpec = tween(durationMillis = 200),
-                            clip = false
-                        )
+                enter = enterTransition,
+                exit = exitTransition
             ) {
                 Column(
                     modifier = Modifier.graphicsLayer { clip = false },
@@ -490,7 +518,8 @@ private fun CounterActionMenu(
                         size = actionButtonSize,
                         iconSize = actionIconSize,
                         shadowElevation = actionButtonShadow,
-                        tonalElevation = actionButtonTonal
+                        tonalElevation = actionButtonTonal,
+                        modifier = Modifier.testTag("active_action_button_edit")
                     )
                     CircularIconButton(
                         icon = Icons.Default.Refresh,
@@ -499,7 +528,8 @@ private fun CounterActionMenu(
                         size = actionButtonSize,
                         iconSize = actionIconSize,
                         shadowElevation = actionButtonShadow,
-                        tonalElevation = actionButtonTonal
+                        tonalElevation = actionButtonTonal,
+                        modifier = Modifier.testTag("active_action_button_reset")
                     )
                     CircularIconButton(
                         icon = Icons.Default.Tune,
@@ -508,7 +538,8 @@ private fun CounterActionMenu(
                         size = actionButtonSize,
                         iconSize = actionIconSize,
                         shadowElevation = actionButtonShadow,
-                        tonalElevation = actionButtonTonal
+                        tonalElevation = actionButtonTonal,
+                        modifier = Modifier.testTag("active_action_button_step")
                     )
                 }
             }
