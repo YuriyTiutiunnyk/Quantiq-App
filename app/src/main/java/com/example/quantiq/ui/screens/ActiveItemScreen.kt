@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.background
@@ -16,15 +15,21 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -53,7 +58,7 @@ import androidx.navigation.NavController
 import com.example.quantiq.R
 import com.example.quantiq.ui.MainIntent
 import com.example.quantiq.ui.MainViewModel
-import com.example.quantiq.ui.components.ElevatedCircleButton
+import com.example.quantiq.ui.components.design.CircularIconButton
 import com.example.quantiq.ui.navigation.NavRoutes
 import kotlinx.coroutines.launch
 
@@ -71,13 +76,13 @@ fun ActiveItemScreen(
     var showStepDialog by remember { mutableStateOf(false) }
     var showCustomStepDialog by remember { mutableStateOf(false) }
     var showResetItemDialog by remember { mutableStateOf(false) }
+    var showActionMenu by remember { mutableStateOf(false) }
     var customStepInput by rememberSaveable(activeCounter?.id) {
         mutableStateOf(activeCounter?.step?.toString().orEmpty())
     }
     val counterPulse = remember { Animatable(1f) }
-    val mainButtonSize = 84.dp
-    val stepButtonSize = mainButtonSize * 0.7f
-    val resetButtonSize = mainButtonSize * 0.3f
+    val actionButtonSize = 56.dp
+    val actionIconSize = 22.dp
     val decrementColor = Color(0xFFFFE1E1)
     val incrementColor = Color(0xFFDDF4E3)
 
@@ -164,19 +169,6 @@ fun ActiveItemScreen(
                         text = activeCounter.title,
                         style = MaterialTheme.typography.headlineSmall
                     )
-                    IconButton(
-                        onClick = {
-                            navController.navigate(NavRoutes.counterDetails(activeCounter.id)) {
-                                launchSingleTop = true
-                            }
-                        },
-                        modifier = Modifier.align(Alignment.CenterEnd)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = stringResource(R.string.edit_item)
-                        )
-                    }
                 }
                 Spacer(modifier = Modifier.weight(1f))
             }
@@ -209,46 +201,72 @@ fun ActiveItemScreen(
 
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .align(Alignment.TopEnd)
                     .padding(horizontal = 24.dp, vertical = 20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Bottom
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    ElevatedCircleButton(
-                        onClick = { showResetItemDialog = true },
-                        size = resetButtonSize,
-                        tonalElevation = 6.dp,
-                        shadowElevation = 8.dp
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = stringResource(R.string.reset_item)
-                        )
-                    }
-                    ElevatedCircleButton(
-                        onClick = { showStepDialog = true },
-                        size = stepButtonSize,
-                        tonalElevation = 6.dp,
-                        shadowElevation = 8.dp
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = stringResource(R.string.step_label),
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.primary
+                CircularIconButton(
+                    icon = Icons.Default.MoreVert,
+                    contentDescription = stringResource(R.string.open_details),
+                    onClick = { showActionMenu = !showActionMenu },
+                    size = actionButtonSize,
+                    iconSize = actionIconSize
+                )
+                AnimatedContent(
+                    targetState = showActionMenu,
+                    transitionSpec = {
+                        val enterSpec = fadeIn(animationSpec = tween(durationMillis = 200)) +
+                            scaleIn(animationSpec = tween(durationMillis = 220), initialScale = 0.9f)
+                        val exitSpec = fadeOut(animationSpec = tween(durationMillis = 160)) +
+                            scaleOut(animationSpec = tween(durationMillis = 180), targetScale = 0.9f)
+                        enterSpec togetherWith exitSpec using SizeTransform(clip = false)
+                    },
+                    label = "fab-actions"
+                ) { expanded ->
+                    if (expanded) {
+                        Column(
+                            modifier = Modifier.graphicsLayer { clip = false },
+                            horizontalAlignment = Alignment.End,
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            CircularIconButton(
+                                icon = Icons.Default.Edit,
+                                contentDescription = stringResource(R.string.open_details),
+                                onClick = {
+                                    showActionMenu = false
+                                    navController.navigate(NavRoutes.counterDetails(activeCounter.id)) {
+                                        launchSingleTop = true
+                                    }
+                                },
+                                size = actionButtonSize,
+                                iconSize = actionIconSize
                             )
-                            Text(
-                                text = activeCounter.step.toString(),
-                                style = MaterialTheme.typography.titleLarge
+                            CircularIconButton(
+                                icon = Icons.Default.Refresh,
+                                contentDescription = stringResource(R.string.reset_item),
+                                onClick = {
+                                    showActionMenu = false
+                                    showResetItemDialog = true
+                                },
+                                size = actionButtonSize,
+                                iconSize = actionIconSize
+                            )
+                            CircularIconButton(
+                                icon = Icons.Default.Tune,
+                                contentDescription = stringResource(R.string.step_label),
+                                onClick = {
+                                    showActionMenu = false
+                                    showStepDialog = true
+                                },
+                                size = actionButtonSize,
+                                iconSize = actionIconSize
                             )
                         }
                     }
                 }
             }
+
         }
     }
 
