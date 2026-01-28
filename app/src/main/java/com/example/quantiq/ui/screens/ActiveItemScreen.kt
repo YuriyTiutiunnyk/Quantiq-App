@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,8 +16,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
@@ -200,48 +206,68 @@ fun ActiveItemScreen(
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                if (showActionMenu) {
-                    SmallFloatingActionButton(
-                        onClick = {
-                            showActionMenu = false
-                            navController.navigate(NavRoutes.counterDetails(activeCounter.id)) {
-                                launchSingleTop = true
-                            }
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = stringResource(R.string.open_details)
-                        )
-                    }
-                    SmallFloatingActionButton(
-                        onClick = {
-                            showActionMenu = false
-                            showResetItemDialog = true
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = stringResource(R.string.reset_item)
-                        )
-                    }
-                    SmallFloatingActionButton(
-                        onClick = {
-                            showActionMenu = false
-                            showStepDialog = true
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Tune,
-                            contentDescription = stringResource(R.string.step_label)
-                        )
-                    }
-                }
                 FloatingActionButton(onClick = { showActionMenu = !showActionMenu }) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,
                         contentDescription = stringResource(R.string.open_details)
                     )
+                }
+                AnimatedVisibility(
+                    visible = showActionMenu,
+                    enter = fadeIn(animationSpec = tween(durationMillis = 220)) +
+                        expandVertically(
+                            expandFrom = Alignment.Top,
+                            animationSpec = tween(durationMillis = 240)
+                        ),
+                    exit = fadeOut(animationSpec = tween(durationMillis = 180)) +
+                        shrinkVertically(
+                            shrinkTowards = Alignment.Top,
+                            animationSpec = tween(durationMillis = 200)
+                        )
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.End,
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        SmallFloatingActionButton(
+                            onClick = {
+                                showActionMenu = false
+                                navController.navigate(NavRoutes.counterDetails(activeCounter.id)) {
+                                    launchSingleTop = true
+                                }
+                            },
+                            modifier = Modifier.defaultMinSize(minWidth = 40.dp, minHeight = 40.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = stringResource(R.string.open_details)
+                            )
+                        }
+                        SmallFloatingActionButton(
+                            onClick = {
+                                showActionMenu = false
+                                showResetItemDialog = true
+                            },
+                            modifier = Modifier.defaultMinSize(minWidth = 40.dp, minHeight = 40.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Refresh,
+                                contentDescription = stringResource(R.string.reset_item)
+                            )
+                        }
+                        SmallFloatingActionButton(
+                            onClick = {
+                                showActionMenu = false
+                                showStepDialog = true
+                            },
+                            modifier = Modifier.defaultMinSize(minWidth = 40.dp, minHeight = 40.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Tune,
+                                contentDescription = stringResource(R.string.step_label)
+                            )
+                        }
+                    }
                 }
             }
 
