@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,6 +31,8 @@ import com.example.quantiq.R
 import com.example.quantiq.domain.model.Counter
 import com.example.quantiq.ui.MainIntent
 import com.example.quantiq.ui.MainViewModel
+import com.example.quantiq.ui.components.SpeedDialAction
+import com.example.quantiq.ui.components.SpeedDialFab
 import com.example.quantiq.ui.navigation.NavRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,6 +43,7 @@ fun ListScreen(
 ) {
     val state by viewModel.state.collectAsState()
     var showDialog by remember { mutableStateOf(false) }
+    var speedDialExpanded by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -53,16 +57,41 @@ fun ListScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                if (!state.isPro && state.counters.size >= 3) {
-                    // Show Limit Snackbar or Navigate to PRO
-                    navController.navigate(NavRoutes.SETTINGS)
-                } else {
-                    showDialog = true
-                }
-            }) {
-                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_counter))
-            }
+            SpeedDialFab(
+                actions = listOf(
+                    SpeedDialAction(
+                        icon = Icons.Default.Add,
+                        label = stringResource(R.string.add_counter),
+                        onClick = {
+                            speedDialExpanded = false
+                            if (!state.isPro && state.counters.size >= 3) {
+                                navController.navigate(NavRoutes.SETTINGS)
+                            } else {
+                                showDialog = true
+                            }
+                        }
+                    ),
+                    SpeedDialAction(
+                        icon = Icons.Default.MenuBook,
+                        label = stringResource(R.string.guidelines_navigation),
+                        onClick = {
+                            speedDialExpanded = false
+                            navController.navigate(NavRoutes.GUIDELINES)
+                        }
+                    ),
+                    SpeedDialAction(
+                        icon = Icons.Default.Settings,
+                        label = stringResource(R.string.settings),
+                        onClick = {
+                            speedDialExpanded = false
+                            navController.navigate(NavRoutes.SETTINGS)
+                        }
+                    )
+                ),
+                expanded = speedDialExpanded,
+                onExpandedChange = { speedDialExpanded = it },
+                primaryContentDescription = stringResource(R.string.add_counter)
+            )
         }
     ) { padding ->
         LazyColumn(
