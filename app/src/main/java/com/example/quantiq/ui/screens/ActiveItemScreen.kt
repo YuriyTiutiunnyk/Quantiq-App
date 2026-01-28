@@ -469,7 +469,10 @@ internal fun CounterActionMenu(
 
     Column(
         modifier = modifier
-            .padding(horizontal = 24.dp, vertical = 20.dp),
+            .padding(horizontal = 24.dp, vertical = 20.dp)
+            .padding(end = shadowPadding, top = shadowPadding, bottom = shadowPadding)
+            .graphicsLayer { clip = false }
+            .testTag("active_action_menu_container"),
         horizontalAlignment = Alignment.End,
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -494,10 +497,7 @@ internal fun CounterActionMenu(
                 exit = exitTransition
             ) {
                 Column(
-                    modifier = Modifier
-                        .graphicsLayer { clip = false }
-                        .padding(end = shadowPadding, top = shadowPadding, bottom = shadowPadding)
-                        .testTag("active_action_menu_container"),
+                    modifier = Modifier.graphicsLayer { clip = false },
                     horizontalAlignment = Alignment.End,
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
