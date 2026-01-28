@@ -217,15 +217,18 @@ fun ActiveItemScreen(
                     enter = fadeIn(animationSpec = tween(durationMillis = 220)) +
                         expandVertically(
                             expandFrom = Alignment.Top,
-                            animationSpec = tween(durationMillis = 240)
+                            animationSpec = tween(durationMillis = 240),
+                            clip = false
                         ),
                     exit = fadeOut(animationSpec = tween(durationMillis = 180)) +
                         shrinkVertically(
                             shrinkTowards = Alignment.Top,
-                            animationSpec = tween(durationMillis = 200)
+                            animationSpec = tween(durationMillis = 200),
+                            clip = false
                         )
                 ) {
                     Column(
+                        modifier = Modifier.graphicsLayer { clip = false },
                         horizontalAlignment = Alignment.End,
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
