@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.background
@@ -19,9 +18,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -53,7 +53,6 @@ import androidx.navigation.NavController
 import com.example.quantiq.R
 import com.example.quantiq.ui.MainIntent
 import com.example.quantiq.ui.MainViewModel
-import com.example.quantiq.ui.components.ElevatedCircleButton
 import com.example.quantiq.ui.navigation.NavRoutes
 import kotlinx.coroutines.launch
 
@@ -71,13 +70,11 @@ fun ActiveItemScreen(
     var showStepDialog by remember { mutableStateOf(false) }
     var showCustomStepDialog by remember { mutableStateOf(false) }
     var showResetItemDialog by remember { mutableStateOf(false) }
+    var showActionMenu by remember { mutableStateOf(false) }
     var customStepInput by rememberSaveable(activeCounter?.id) {
         mutableStateOf(activeCounter?.step?.toString().orEmpty())
     }
     val counterPulse = remember { Animatable(1f) }
-    val mainButtonSize = 84.dp
-    val stepButtonSize = mainButtonSize * 0.7f
-    val resetButtonSize = mainButtonSize * 0.3f
     val decrementColor = Color(0xFFFFE1E1)
     val incrementColor = Color(0xFFDDF4E3)
 
@@ -164,18 +161,41 @@ fun ActiveItemScreen(
                         text = activeCounter.title,
                         style = MaterialTheme.typography.headlineSmall
                     )
-                    IconButton(
-                        onClick = {
-                            navController.navigate(NavRoutes.counterDetails(activeCounter.id)) {
-                                launchSingleTop = true
-                            }
-                        },
-                        modifier = Modifier.align(Alignment.CenterEnd)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = stringResource(R.string.edit_item)
-                        )
+                    Box(modifier = Modifier.align(Alignment.CenterEnd)) {
+                        IconButton(onClick = { showActionMenu = true }) {
+                            Icon(
+                                imageVector = Icons.Default.MoreVert,
+                                contentDescription = stringResource(R.string.open_details)
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = showActionMenu,
+                            onDismissRequest = { showActionMenu = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.open_details)) },
+                                onClick = {
+                                    showActionMenu = false
+                                    navController.navigate(NavRoutes.counterDetails(activeCounter.id)) {
+                                        launchSingleTop = true
+                                    }
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.reset)) },
+                                onClick = {
+                                    showActionMenu = false
+                                    showResetItemDialog = true
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.step_label)) },
+                                onClick = {
+                                    showActionMenu = false
+                                    showStepDialog = true
+                                }
+                            )
+                        }
                     }
                 }
                 Spacer(modifier = Modifier.weight(1f))
@@ -207,48 +227,6 @@ fun ActiveItemScreen(
                 )
             }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp, vertical = 20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Bottom
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    ElevatedCircleButton(
-                        onClick = { showResetItemDialog = true },
-                        size = resetButtonSize,
-                        tonalElevation = 6.dp,
-                        shadowElevation = 8.dp
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = stringResource(R.string.reset_item)
-                        )
-                    }
-                    ElevatedCircleButton(
-                        onClick = { showStepDialog = true },
-                        size = stepButtonSize,
-                        tonalElevation = 6.dp,
-                        shadowElevation = 8.dp
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = stringResource(R.string.step_label),
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            Text(
-                                text = activeCounter.step.toString(),
-                                style = MaterialTheme.typography.titleLarge
-                            )
-                        }
-                    }
-                }
-            }
         }
     }
 
