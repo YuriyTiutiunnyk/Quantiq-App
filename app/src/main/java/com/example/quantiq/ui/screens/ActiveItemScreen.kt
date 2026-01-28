@@ -85,7 +85,7 @@ fun ActiveItemScreen(
     val actionIconSize = 22.dp
     val actionButtonShadow = 10.dp
     val actionButtonTonal = 4.dp
-    val actionShadowInset = 10.dp
+    val actionShadowInset = 0.dp
     val decrementColor = Color(0xFFFFE1E1)
     val incrementColor = Color(0xFFDDF4E3)
 
