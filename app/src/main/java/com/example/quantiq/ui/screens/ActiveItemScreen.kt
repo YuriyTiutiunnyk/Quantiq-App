@@ -250,7 +250,7 @@ fun ActiveItemScreen(
                             size = actionButtonSize,
                             iconSize = actionIconSize,
                             shadowElevation = if (isActionMenuAnimating) 0.dp else actionButtonShadow,
-                            tonalElevation = if (isActionMenuAnimating) 0.dp else actionButtonTonal
+                            tonalElevation = actionButtonTonal
                         )
                         CircularIconButton(
                             icon = Icons.Default.Refresh,
@@ -262,7 +262,7 @@ fun ActiveItemScreen(
                             size = actionButtonSize,
                             iconSize = actionIconSize,
                             shadowElevation = if (isActionMenuAnimating) 0.dp else actionButtonShadow,
-                            tonalElevation = if (isActionMenuAnimating) 0.dp else actionButtonTonal
+                            tonalElevation = actionButtonTonal
                         )
                         CircularIconButton(
                             icon = Icons.Default.Tune,
@@ -274,7 +274,7 @@ fun ActiveItemScreen(
                             size = actionButtonSize,
                             iconSize = actionIconSize,
                             shadowElevation = if (isActionMenuAnimating) 0.dp else actionButtonShadow,
-                            tonalElevation = if (isActionMenuAnimating) 0.dp else actionButtonTonal
+                            tonalElevation = actionButtonTonal
                         )
                     }
                 }
