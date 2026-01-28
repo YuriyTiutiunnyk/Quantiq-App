@@ -15,14 +15,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
@@ -77,14 +76,20 @@ fun ActiveItemScreen(
     var showCustomStepDialog by remember { mutableStateOf(false) }
     var showResetItemDialog by remember { mutableStateOf(false) }
     var showActionMenu by remember { mutableStateOf(false) }
+    val actionMenuState = remember { MutableTransitionState(false) }
     var customStepInput by rememberSaveable(activeCounter?.id) {
         mutableStateOf(activeCounter?.step?.toString().orEmpty())
     }
     val counterPulse = remember { Animatable(1f) }
     val actionButtonSize = 56.dp
     val actionIconSize = 22.dp
+    val actionButtonShadow = 10.dp
+    val actionButtonTonal = 4.dp
     val decrementColor = Color(0xFFFFE1E1)
     val incrementColor = Color(0xFFDDF4E3)
+
+    actionMenuState.targetState = showActionMenu
+    val isActionMenuAnimating = !actionMenuState.isIdle
 
     Scaffold(
         contentWindowInsets = WindowInsets(0),
@@ -213,56 +218,64 @@ fun ActiveItemScreen(
                     size = actionButtonSize,
                     iconSize = actionIconSize
                 )
-                AnimatedContent(
-                    targetState = showActionMenu,
-                    transitionSpec = {
-                        val enterSpec = fadeIn(animationSpec = tween(durationMillis = 200)) +
-                            scaleIn(animationSpec = tween(durationMillis = 220), initialScale = 0.9f)
-                        val exitSpec = fadeOut(animationSpec = tween(durationMillis = 160)) +
-                            scaleOut(animationSpec = tween(durationMillis = 180), targetScale = 0.9f)
-                        enterSpec togetherWith exitSpec using SizeTransform(clip = false)
-                    },
-                    label = "fab-actions"
-                ) { expanded ->
-                    if (expanded) {
-                        Column(
-                            modifier = Modifier.graphicsLayer { clip = false },
-                            horizontalAlignment = Alignment.End,
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            CircularIconButton(
-                                icon = Icons.Default.Edit,
-                                contentDescription = stringResource(R.string.open_details),
-                                onClick = {
-                                    showActionMenu = false
-                                    navController.navigate(NavRoutes.counterDetails(activeCounter.id)) {
-                                        launchSingleTop = true
-                                    }
-                                },
-                                size = actionButtonSize,
-                                iconSize = actionIconSize
-                            )
-                            CircularIconButton(
-                                icon = Icons.Default.Refresh,
-                                contentDescription = stringResource(R.string.reset_item),
-                                onClick = {
-                                    showActionMenu = false
-                                    showResetItemDialog = true
-                                },
-                                size = actionButtonSize,
-                                iconSize = actionIconSize
-                            )
-                            CircularIconButton(
-                                icon = Icons.Default.Tune,
-                                contentDescription = stringResource(R.string.step_label),
-                                onClick = {
-                                    showActionMenu = false
-                                    showStepDialog = true
-                                },
-                                size = actionButtonSize,
-                                iconSize = actionIconSize
-                            )
-                        }
+                AnimatedVisibility(
+                    visibleState = actionMenuState,
+                    enter = fadeIn(animationSpec = tween(durationMillis = 220)) +
+                        expandVertically(
+                            expandFrom = Alignment.Top,
+                            animationSpec = tween(durationMillis = 240),
+                            clip = false
+                        ),
+                    exit = fadeOut(animationSpec = tween(durationMillis = 180)) +
+                        shrinkVertically(
+                            shrinkTowards = Alignment.Top,
+                            animationSpec = tween(durationMillis = 200),
+                            clip = false
+                        )
+                ) {
+                    Column(
+                        modifier = Modifier.graphicsLayer { clip = false },
+                        horizontalAlignment = Alignment.End,
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        CircularIconButton(
+                            icon = Icons.Default.Edit,
+                            contentDescription = stringResource(R.string.open_details),
+                            onClick = {
+                                showActionMenu = false
+                                navController.navigate(NavRoutes.counterDetails(activeCounter.id)) {
+                                    launchSingleTop = true
+                                }
+                            },
+                            size = actionButtonSize,
+                            iconSize = actionIconSize,
+                            shadowElevation = if (isActionMenuAnimating) 0.dp else actionButtonShadow,
+                            tonalElevation = if (isActionMenuAnimating) 0.dp else actionButtonTonal
+                        )
+                        CircularIconButton(
+                            icon = Icons.Default.Refresh,
+                            contentDescription = stringResource(R.string.reset_item),
+                            onClick = {
+                                showActionMenu = false
+                                showResetItemDialog = true
+                            },
+                            size = actionButtonSize,
+                            iconSize = actionIconSize,
+                            shadowElevation = if (isActionMenuAnimating) 0.dp else actionButtonShadow,
+                            tonalElevation = if (isActionMenuAnimating) 0.dp else actionButtonTonal
+                        )
+                        CircularIconButton(
+                            icon = Icons.Default.Tune,
+                            contentDescription = stringResource(R.string.step_label),
+                            onClick = {
+                                showActionMenu = false
+                                showStepDialog = true
+                            },
+                            size = actionButtonSize,
+                            iconSize = actionIconSize,
+                            shadowElevation = if (isActionMenuAnimating) 0.dp else actionButtonShadow,
+                            tonalElevation = if (isActionMenuAnimating) 0.dp else actionButtonTonal
+                        )
                     }
                 }
             }
