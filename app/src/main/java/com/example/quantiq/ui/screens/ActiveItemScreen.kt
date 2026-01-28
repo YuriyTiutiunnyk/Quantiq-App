@@ -453,8 +453,10 @@ private fun CounterActionMenu(
         )
         Box(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(horizontal = actionShadowInset, vertical = actionShadowInset)
-                .graphicsLayer { clip = false }
+                .graphicsLayer { clip = false },
+            contentAlignment = Alignment.TopEnd
         ) {
             AnimatedVisibility(
                 visible = expanded,
