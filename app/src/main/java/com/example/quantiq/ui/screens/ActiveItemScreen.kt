@@ -109,178 +109,63 @@ fun ActiveItemScreen(
                 .padding(padding)
                 .fillMaxSize()
         ) {
-            Row(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxSize()
-                        .background(decrementColor)
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        ) {
-                            viewModel.dispatch(
-                                MainIntent.UpdateCounterValue(activeCounter, -activeCounter.step)
-                            )
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.decrement_symbol),
-                        style = MaterialTheme.typography.displayMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+            CounterBackground(
+                decrementColor = decrementColor,
+                incrementColor = incrementColor,
+                onDecrement = {
+                    viewModel.dispatch(
+                        MainIntent.UpdateCounterValue(activeCounter, -activeCounter.step)
+                    )
+                },
+                onIncrement = {
+                    viewModel.dispatch(
+                        MainIntent.UpdateCounterValue(activeCounter, activeCounter.step)
                     )
                 }
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxSize()
-                        .background(incrementColor)
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        ) {
-                            viewModel.dispatch(
-                                MainIntent.UpdateCounterValue(activeCounter, activeCounter.step)
-                            )
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.increment_symbol),
-                        style = MaterialTheme.typography.displayMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
-                    )
-                }
-            }
+            )
 
-            Column(
+            CounterHeader(
+                title = activeCounter.title,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 24.dp, vertical = 20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = activeCounter.title,
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-                }
-                Spacer(modifier = Modifier.weight(1f))
-            }
+                    .padding(horizontal = 24.dp, vertical = 20.dp)
+            )
 
-            Box(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .size(180.dp)
-                    .graphicsLayer(
-                        scaleX = counterPulse.value,
-                        scaleY = counterPulse.value
+            CounterValueCircle(
+                value = activeCounter.value,
+                pulse = counterPulse.value,
+                onIncrement = {
+                    viewModel.dispatch(
+                        MainIntent.UpdateCounterValue(activeCounter, activeCounter.step)
                     )
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    ) {
-                        viewModel.dispatch(
-                            MainIntent.UpdateCounterValue(activeCounter, activeCounter.step)
-                        )
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = activeCounter.value.toString(),
-                    style = MaterialTheme.typography.displayLarge
-                )
-            }
+                },
+                modifier = Modifier.align(Alignment.Center)
+            )
 
-            Column(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(horizontal = 24.dp, vertical = 20.dp),
-                horizontalAlignment = Alignment.End,
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                CircularIconButton(
-                    icon = Icons.Default.MoreVert,
-                    contentDescription = stringResource(R.string.open_details),
-                    onClick = { showActionMenu = !showActionMenu },
-                    size = actionButtonSize,
-                    iconSize = actionIconSize
-                )
-                Box(
-                    modifier = Modifier
-                        .padding(horizontal = actionShadowInset, vertical = actionShadowInset)
-                        .graphicsLayer { clip = false }
-                ) {
-                    AnimatedVisibility(
-                        visible = showActionMenu,
-                        enter = fadeIn(animationSpec = tween(durationMillis = 220)) +
-                            expandVertically(
-                                expandFrom = Alignment.Top,
-                                animationSpec = tween(durationMillis = 240),
-                                clip = false
-                            ),
-                        exit = fadeOut(animationSpec = tween(durationMillis = 180)) +
-                            shrinkVertically(
-                                shrinkTowards = Alignment.Top,
-                                animationSpec = tween(durationMillis = 200),
-                                clip = false
-                            )
-                    ) {
-                        Column(
-                            modifier = Modifier.graphicsLayer { clip = false },
-                            horizontalAlignment = Alignment.End,
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            CircularIconButton(
-                                icon = Icons.Default.Edit,
-                                contentDescription = stringResource(R.string.open_details),
-                                onClick = {
-                                    showActionMenu = false
-                                    navController.navigate(NavRoutes.counterDetails(activeCounter.id)) {
-                                        launchSingleTop = true
-                                    }
-                                },
-                                size = actionButtonSize,
-                                iconSize = actionIconSize,
-                                shadowElevation = actionButtonShadow,
-                                tonalElevation = actionButtonTonal
-                            )
-                            CircularIconButton(
-                                icon = Icons.Default.Refresh,
-                                contentDescription = stringResource(R.string.reset_item),
-                                onClick = {
-                                    showActionMenu = false
-                                    showResetItemDialog = true
-                                },
-                                size = actionButtonSize,
-                                iconSize = actionIconSize,
-                                shadowElevation = actionButtonShadow,
-                                tonalElevation = actionButtonTonal
-                            )
-                            CircularIconButton(
-                                icon = Icons.Default.Tune,
-                                contentDescription = stringResource(R.string.step_label),
-                                onClick = {
-                                    showActionMenu = false
-                                    showStepDialog = true
-                                },
-                                size = actionButtonSize,
-                                iconSize = actionIconSize,
-                                shadowElevation = actionButtonShadow,
-                                tonalElevation = actionButtonTonal
-                            )
-                        }
+            CounterActionMenu(
+                expanded = showActionMenu,
+                onToggle = { showActionMenu = !showActionMenu },
+                onDetails = {
+                    showActionMenu = false
+                    navController.navigate(NavRoutes.counterDetails(activeCounter.id)) {
+                        launchSingleTop = true
                     }
-                }
-            }
+                },
+                onReset = {
+                    showActionMenu = false
+                    showResetItemDialog = true
+                },
+                onStep = {
+                    showActionMenu = false
+                    showStepDialog = true
+                },
+                actionButtonSize = actionButtonSize,
+                actionIconSize = actionIconSize,
+                actionButtonShadow = actionButtonShadow,
+                actionButtonTonal = actionButtonTonal,
+                actionShadowInset = actionShadowInset,
+                modifier = Modifier.align(Alignment.TopEnd)
+            )
 
         }
     }
@@ -434,4 +319,192 @@ private fun StepPickerDialog(
             }
         }
     )
+}
+
+@Composable
+private fun CounterBackground(
+    decrementColor: Color,
+    incrementColor: Color,
+    onDecrement: () -> Unit,
+    onIncrement: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(modifier = modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxSize()
+                .background(decrementColor)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) {
+                    onDecrement()
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(R.string.decrement_symbol),
+                style = MaterialTheme.typography.displayMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+            )
+        }
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxSize()
+                .background(incrementColor)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) {
+                    onIncrement()
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(R.string.increment_symbol),
+                style = MaterialTheme.typography.displayMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+            )
+        }
+    }
+}
+
+@Composable
+private fun CounterHeader(
+    title: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.headlineSmall
+            )
+        }
+        Spacer(modifier = Modifier.weight(1f))
+    }
+}
+
+@Composable
+private fun CounterValueCircle(
+    value: Int,
+    pulse: Float,
+    onIncrement: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .size(180.dp)
+            .graphicsLayer(
+                scaleX = pulse,
+                scaleY = pulse
+            )
+            .clip(CircleShape)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                onIncrement()
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = value.toString(),
+            style = MaterialTheme.typography.displayLarge
+        )
+    }
+}
+
+@Composable
+private fun CounterActionMenu(
+    expanded: Boolean,
+    onToggle: () -> Unit,
+    onDetails: () -> Unit,
+    onReset: () -> Unit,
+    onStep: () -> Unit,
+    actionButtonSize: Dp,
+    actionIconSize: Dp,
+    actionButtonShadow: Dp,
+    actionButtonTonal: Dp,
+    actionShadowInset: Dp,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .padding(horizontal = 24.dp, vertical = 20.dp),
+        horizontalAlignment = Alignment.End,
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        CircularIconButton(
+            icon = Icons.Default.MoreVert,
+            contentDescription = stringResource(R.string.open_details),
+            onClick = onToggle,
+            size = actionButtonSize,
+            iconSize = actionIconSize
+        )
+        Box(
+            modifier = Modifier
+                .padding(horizontal = actionShadowInset, vertical = actionShadowInset)
+                .graphicsLayer { clip = false }
+        ) {
+            AnimatedVisibility(
+                visible = expanded,
+                enter = fadeIn(animationSpec = tween(durationMillis = 220)) +
+                    expandVertically(
+                        expandFrom = Alignment.Top,
+                        animationSpec = tween(durationMillis = 240),
+                        clip = false
+                    ),
+                exit = fadeOut(animationSpec = tween(durationMillis = 180)) +
+                    shrinkVertically(
+                        shrinkTowards = Alignment.Top,
+                        animationSpec = tween(durationMillis = 200),
+                        clip = false
+                    )
+            ) {
+                Column(
+                    modifier = Modifier.graphicsLayer { clip = false },
+                    horizontalAlignment = Alignment.End,
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    CircularIconButton(
+                        icon = Icons.Default.Edit,
+                        contentDescription = stringResource(R.string.open_details),
+                        onClick = onDetails,
+                        size = actionButtonSize,
+                        iconSize = actionIconSize,
+                        shadowElevation = actionButtonShadow,
+                        tonalElevation = actionButtonTonal
+                    )
+                    CircularIconButton(
+                        icon = Icons.Default.Refresh,
+                        contentDescription = stringResource(R.string.reset_item),
+                        onClick = onReset,
+                        size = actionButtonSize,
+                        iconSize = actionIconSize,
+                        shadowElevation = actionButtonShadow,
+                        tonalElevation = actionButtonTonal
+                    )
+                    CircularIconButton(
+                        icon = Icons.Default.Tune,
+                        contentDescription = stringResource(R.string.step_label),
+                        onClick = onStep,
+                        size = actionButtonSize,
+                        iconSize = actionIconSize,
+                        shadowElevation = actionButtonShadow,
+                        tonalElevation = actionButtonTonal
+                    )
+                }
+            }
+        }
+    }
 }
