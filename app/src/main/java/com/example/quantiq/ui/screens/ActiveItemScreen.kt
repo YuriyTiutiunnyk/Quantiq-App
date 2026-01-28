@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -30,12 +29,9 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -61,6 +57,7 @@ import androidx.navigation.NavController
 import com.example.quantiq.R
 import com.example.quantiq.ui.MainIntent
 import com.example.quantiq.ui.MainViewModel
+import com.example.quantiq.ui.components.design.CircularIconButton
 import com.example.quantiq.ui.navigation.NavRoutes
 import kotlinx.coroutines.launch
 
@@ -83,6 +80,8 @@ fun ActiveItemScreen(
         mutableStateOf(activeCounter?.step?.toString().orEmpty())
     }
     val counterPulse = remember { Animatable(1f) }
+    val actionButtonSize = 56.dp
+    val actionIconSize = 22.dp
     val decrementColor = Color(0xFFFFE1E1)
     val incrementColor = Color(0xFFDDF4E3)
 
@@ -206,12 +205,13 @@ fun ActiveItemScreen(
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                FloatingActionButton(onClick = { showActionMenu = !showActionMenu }) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = stringResource(R.string.open_details)
-                    )
-                }
+                CircularIconButton(
+                    icon = Icons.Default.MoreVert,
+                    contentDescription = stringResource(R.string.open_details),
+                    onClick = { showActionMenu = !showActionMenu },
+                    size = actionButtonSize,
+                    iconSize = actionIconSize
+                )
                 AnimatedVisibility(
                     visible = showActionMenu,
                     enter = fadeIn(animationSpec = tween(durationMillis = 220)) +
@@ -229,44 +229,38 @@ fun ActiveItemScreen(
                         horizontalAlignment = Alignment.End,
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        SmallFloatingActionButton(
+                        CircularIconButton(
+                            icon = Icons.Default.Edit,
+                            contentDescription = stringResource(R.string.open_details),
                             onClick = {
                                 showActionMenu = false
                                 navController.navigate(NavRoutes.counterDetails(activeCounter.id)) {
                                     launchSingleTop = true
                                 }
                             },
-                            modifier = Modifier.defaultMinSize(minWidth = 40.dp, minHeight = 40.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = stringResource(R.string.open_details)
-                            )
-                        }
-                        SmallFloatingActionButton(
+                            size = actionButtonSize,
+                            iconSize = actionIconSize
+                        )
+                        CircularIconButton(
+                            icon = Icons.Default.Refresh,
+                            contentDescription = stringResource(R.string.reset_item),
                             onClick = {
                                 showActionMenu = false
                                 showResetItemDialog = true
                             },
-                            modifier = Modifier.defaultMinSize(minWidth = 40.dp, minHeight = 40.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Refresh,
-                                contentDescription = stringResource(R.string.reset_item)
-                            )
-                        }
-                        SmallFloatingActionButton(
+                            size = actionButtonSize,
+                            iconSize = actionIconSize
+                        )
+                        CircularIconButton(
+                            icon = Icons.Default.Tune,
+                            contentDescription = stringResource(R.string.step_label),
                             onClick = {
                                 showActionMenu = false
                                 showStepDialog = true
                             },
-                            modifier = Modifier.defaultMinSize(minWidth = 40.dp, minHeight = 40.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Tune,
-                                contentDescription = stringResource(R.string.step_label)
-                            )
-                        }
+                            size = actionButtonSize,
+                            iconSize = actionIconSize
+                        )
                     }
                 }
             }

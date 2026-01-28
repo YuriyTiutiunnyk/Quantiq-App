@@ -16,10 +16,7 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -30,6 +27,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.quantiq.ui.components.design.CircularIconButton
 
 /**
  * Renders a floating bottom navigation bar with three circular actions.
@@ -197,25 +195,17 @@ private fun BottomBarButton(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
-        Surface(
+        CircularIconButton(
+            icon = icon,
+            contentDescription = label,
             onClick = onClick,
-            shape = CircleShape,
-            color = buttonContainerColor,
+            size = buttonSize,
+            iconSize = iconSize,
+            containerColor = buttonContainerColor,
+            contentColor = contentColor,
             shadowElevation = shadowElevation,
             tonalElevation = tonalElevation
-        ) {
-            Box(
-                modifier = Modifier.size(buttonSize),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    icon,
-                    contentDescription = label,
-                    tint = contentColor,
-                    modifier = Modifier.size(iconSize)
-                )
-            }
-        }
+        )
         Spacer(modifier = Modifier.height(4.dp))
         Text(text = label, color = contentColor, style = labelStyle)
     }
