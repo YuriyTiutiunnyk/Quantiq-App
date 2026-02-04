@@ -4,11 +4,9 @@ import androidx.navigation.NavController
 
 fun NavController.navigateToRootTab(route: String) {
     navigate(route) {
-        popUpTo(graph.startDestinationId) {
+        popUpTo(graph.id) {
             inclusive = true
-            saveState = true
         }
         launchSingleTop = true
-        restoreState = true
     }
 }

@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -54,6 +53,7 @@ fun ListScreen(
         },
         floatingActionButton = {
             CircularIconButton(
+                modifier = Modifier.padding(bottom = 120.dp),
                 icon = Icons.Default.Add,
                 contentDescription = stringResource(R.string.add_counter),
                 onClick = { showDialog = true },

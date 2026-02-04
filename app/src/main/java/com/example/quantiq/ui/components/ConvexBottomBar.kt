@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -187,16 +186,21 @@ private fun BottomBarButton(
     modifier: Modifier = Modifier
 ) {
     val contentColor = if (selected) selectedColor else unselectedColor
-    CircularIconButton(
-        icon = icon,
-        contentDescription = label,
-        onClick = onClick,
-        size = buttonSize,
-        iconSize = iconSize,
-        containerColor = buttonContainerColor,
-        contentColor = contentColor,
-        shadowElevation = shadowElevation,
-        tonalElevation = tonalElevation,
-        modifier = modifier
-    )
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        CircularIconButton(
+            icon = icon,
+            contentDescription = label,
+            onClick = onClick,
+            size = buttonSize,
+            iconSize = iconSize,
+            containerColor = buttonContainerColor,
+            contentColor = contentColor,
+            shadowElevation = shadowElevation,
+            tonalElevation = tonalElevation,
+            modifier = Modifier.size(buttonSize)
+        )
+    }
 }
