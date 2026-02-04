@@ -1,5 +1,6 @@
 package com.example.quantiq.ui.screens
 
+import android.provider.Settings
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -20,16 +21,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Tune
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -65,7 +65,6 @@ import com.example.quantiq.ui.MainViewModel
 import com.example.quantiq.ui.components.design.CircularIconButton
 import com.example.quantiq.ui.navigation.NavRoutes
 import kotlinx.coroutines.launch
-import android.provider.Settings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -460,21 +459,21 @@ internal fun CounterActionMenu(
         fadeIn(animationSpec = tween(durationMillis = 150))
     } else {
         fadeIn(animationSpec = tween(durationMillis = 220)) +
-            expandVertically(
-                expandFrom = Alignment.Top,
-                animationSpec = tween(durationMillis = 240),
-                clip = false
-            )
+                expandVertically(
+                    expandFrom = Alignment.Top,
+                    animationSpec = tween(durationMillis = 240),
+                    clip = true
+                )
     }
     val exitTransition = if (reduceMotion) {
         fadeOut(animationSpec = tween(durationMillis = 150))
     } else {
         fadeOut(animationSpec = tween(durationMillis = 180)) +
-            shrinkVertically(
-                shrinkTowards = Alignment.Top,
-                animationSpec = tween(durationMillis = 200),
-                clip = false
-            )
+                shrinkVertically(
+                    shrinkTowards = Alignment.Top,
+                    animationSpec = tween(durationMillis = 200),
+                    clip = true
+                )
     }
 
     Column(
@@ -482,6 +481,7 @@ internal fun CounterActionMenu(
             .padding(horizontal = 24.dp, vertical = 20.dp)
             .padding(end = shadowPadding, top = shadowPadding, bottom = shadowPadding)
             .graphicsLayer { clip = false }
+            .width(150.dp)
             .testTag("active_action_menu_container"),
         horizontalAlignment = Alignment.End,
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -507,7 +507,9 @@ internal fun CounterActionMenu(
                 exit = exitTransition
             ) {
                 Column(
-                    modifier = Modifier.graphicsLayer { clip = false },
+                    modifier = Modifier
+                        .graphicsLayer { clip = false }
+                        .padding(horizontal = 0.dp, vertical = 6.dp), //todo to remove shrinking - add horizontal
                     horizontalAlignment = Alignment.End,
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {

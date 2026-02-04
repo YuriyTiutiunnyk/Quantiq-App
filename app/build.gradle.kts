@@ -58,6 +58,8 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.compose.animation)
+    implementation(libs.androidx.compose.animation.core)
     implementation(libs.accompanist.navigation.animation)
 
     implementation(libs.androidx.room.runtime)
