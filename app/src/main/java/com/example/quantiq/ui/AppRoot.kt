@@ -1,6 +1,14 @@
 package com.example.quantiq.ui
 
 import android.view.View
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -15,16 +23,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -32,10 +33,6 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavType
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
-import androidx.compose.ui.res.stringResource
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.example.quantiq.R
 import com.example.quantiq.ui.components.BottomBarItem
 import com.example.quantiq.ui.components.BottomBarItemPosition
@@ -55,6 +52,9 @@ import com.example.quantiq.ui.settings.notifications.NotificationsSettingsViewMo
 import com.example.quantiq.ui.settings.notifications.UpcomingScheduleScreen
 import com.example.quantiq.ui.settings.notifications.UpcomingScheduleViewModel
 import com.example.quantiq.ui.settings.notifications.UpcomingScheduleViewModelFactory
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 /**
  * The root composable that wires navigation, ViewModels, and layout direction for the app.
@@ -139,41 +139,39 @@ fun AppRoot(
                 }
             }
         ) { padding ->
-            val contentPadding = if (currentRoute == NavRoutes.ACTIVE) {
-                PaddingValues(
-                    start = padding.calculateStartPadding(layoutDirection),
-                    top = padding.calculateTopPadding(),
-                    end = padding.calculateEndPadding(layoutDirection),
-                    bottom = 0.dp
-                )
-            } else {
-                padding
-            }
+            val contentPadding = PaddingValues(
+                start = padding.calculateStartPadding(layoutDirection),
+                top = padding.calculateTopPadding(),
+                end = padding.calculateEndPadding(layoutDirection),
+                bottom = 0.dp
+            )
             val tabOrder = mapOf(
                 NavRoutes.LIST to 0,
                 NavRoutes.ACTIVE to 1,
                 NavRoutes.SETTINGS to 2
             )
-            val slideInTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition = {
-                val fromIndex = tabOrder[initialState.destination.route]
-                val toIndex = tabOrder[targetState.destination.route]
-                if (fromIndex != null && toIndex != null && fromIndex != toIndex) {
-                    val direction = if (toIndex > fromIndex) 1 else -1
-                    slideInHorizontally { fullWidth -> fullWidth * direction } + fadeIn()
-                } else {
-                    fadeIn()
+            val slideInTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition =
+                {
+                    val fromIndex = tabOrder[initialState.destination.route]
+                    val toIndex = tabOrder[targetState.destination.route]
+                    if (fromIndex != null && toIndex != null && fromIndex != toIndex) {
+                        val direction = if (toIndex > fromIndex) 1 else -1
+                        slideInHorizontally { fullWidth -> fullWidth * direction } + fadeIn()
+                    } else {
+                        fadeIn()
+                    }
                 }
-            }
-            val slideOutTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition = {
-                val fromIndex = tabOrder[initialState.destination.route]
-                val toIndex = tabOrder[targetState.destination.route]
-                if (fromIndex != null && toIndex != null && fromIndex != toIndex) {
-                    val direction = if (toIndex > fromIndex) -1 else 1
-                    slideOutHorizontally { fullWidth -> fullWidth * direction } + fadeOut()
-                } else {
-                    fadeOut()
+            val slideOutTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition =
+                {
+                    val fromIndex = tabOrder[initialState.destination.route]
+                    val toIndex = tabOrder[targetState.destination.route]
+                    if (fromIndex != null && toIndex != null && fromIndex != toIndex) {
+                        val direction = if (toIndex > fromIndex) -1 else 1
+                        slideOutHorizontally { fullWidth -> fullWidth * direction } + fadeOut()
+                    } else {
+                        fadeOut()
+                    }
                 }
-            }
             AnimatedNavHost(
                 navController = navController,
                 startDestination = NavRoutes.LIST,
