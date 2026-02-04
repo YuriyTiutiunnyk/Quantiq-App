@@ -15,18 +15,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.compose.ui.res.stringResource
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.example.quantiq.R
 import com.example.quantiq.ui.components.BottomBarItem
 import com.example.quantiq.ui.components.BottomBarItemPosition
@@ -71,7 +79,7 @@ fun AppRoot(
         }
 
     CompositionLocalProvider(LocalLayoutDirection provides layoutDirection) {
-        val navController = rememberNavController()
+        val navController = rememberAnimatedNavController()
         val mainViewModel: MainViewModel = viewModel(factory = mainViewModelFactory)
         val activeTabs = listOf(NavRoutes.LIST, NavRoutes.ACTIVE, NavRoutes.SETTINGS)
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -141,10 +149,39 @@ fun AppRoot(
             } else {
                 padding
             }
-            NavHost(
+            val tabOrder = mapOf(
+                NavRoutes.LIST to 0,
+                NavRoutes.ACTIVE to 1,
+                NavRoutes.SETTINGS to 2
+            )
+            val slideInTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition = {
+                val fromIndex = tabOrder[initialState.destination.route]
+                val toIndex = tabOrder[targetState.destination.route]
+                if (fromIndex != null && toIndex != null && fromIndex != toIndex) {
+                    val direction = if (toIndex > fromIndex) 1 else -1
+                    slideInHorizontally { fullWidth -> fullWidth * direction } + fadeIn()
+                } else {
+                    fadeIn()
+                }
+            }
+            val slideOutTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition = {
+                val fromIndex = tabOrder[initialState.destination.route]
+                val toIndex = tabOrder[targetState.destination.route]
+                if (fromIndex != null && toIndex != null && fromIndex != toIndex) {
+                    val direction = if (toIndex > fromIndex) -1 else 1
+                    slideOutHorizontally { fullWidth -> fullWidth * direction } + fadeOut()
+                } else {
+                    fadeOut()
+                }
+            }
+            AnimatedNavHost(
                 navController = navController,
                 startDestination = NavRoutes.LIST,
-                modifier = androidx.compose.ui.Modifier.padding(contentPadding)
+                modifier = androidx.compose.ui.Modifier.padding(contentPadding),
+                enterTransition = slideInTransition,
+                exitTransition = slideOutTransition,
+                popEnterTransition = slideInTransition,
+                popExitTransition = slideOutTransition
             ) {
                 composable(NavRoutes.LIST) {
                     ListScreen(viewModel = mainViewModel, navController = navController)
