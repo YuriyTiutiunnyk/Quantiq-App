@@ -31,6 +31,7 @@ import com.example.quantiq.R
 import com.example.quantiq.domain.model.Counter
 import com.example.quantiq.ui.MainIntent
 import com.example.quantiq.ui.MainViewModel
+import com.example.quantiq.ui.components.design.CircularIconButton
 import com.example.quantiq.ui.navigation.NavRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,16 +57,17 @@ fun ListScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                if (!state.isPro && state.counters.size >= 3) {
-                    // Show Limit Snackbar or Navigate to PRO
-                    navController.navigate(NavRoutes.SETTINGS)
-                } else {
-                    showDialog = true
-                }
-            }) {
-                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_counter))
-            }
+            CircularIconButton(
+                icon = Icons.Default.Add,
+                contentDescription = stringResource(R.string.add_counter),
+                onClick = { showDialog = true },
+                size = 56.dp,
+                iconSize = 22.dp,
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.primary,
+                shadowElevation = 10.dp,
+                tonalElevation = 4.dp
+            )
         }
     ) { padding ->
         LazyColumn(
