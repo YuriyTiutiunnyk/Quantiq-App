@@ -150,6 +150,17 @@ fun AppRoot(
                 NavRoutes.ACTIVE to 1,
                 NavRoutes.SETTINGS to 2
             )
+            val horizontalDirection: (String?, String?) -> Int? = { fromRoute, toRoute ->
+                val fromIndex = tabOrder[fromRoute]
+                val toIndex = tabOrder[toRoute]
+                when {
+                    fromIndex != null && toIndex != null && fromIndex != toIndex ->
+                        if (toIndex > fromIndex) 1 else -1
+                    toRoute == NavRoutes.SETTINGS -> 1
+                    fromRoute == NavRoutes.SETTINGS -> -1
+                    else -> null
+                }
+            }
             val slideInTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition =
                 {
                     val fromIndex = tabOrder[initialState.destination.route]
@@ -170,6 +181,30 @@ fun AppRoot(
                         slideOutHorizontally { fullWidth -> fullWidth * direction } + fadeOut()
                     } else {
                         fadeOut()
+                    }
+                }
+            val settingsEnterTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition =
+                {
+                    val direction = horizontalDirection(
+                        initialState.destination.route,
+                        targetState.destination.route
+                    )
+                    if (direction != null) {
+                        slideInHorizontally { fullWidth -> fullWidth * direction }
+                    } else {
+                        EnterTransition.None
+                    }
+                }
+            val settingsExitTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition =
+                {
+                    val direction = horizontalDirection(
+                        initialState.destination.route,
+                        targetState.destination.route
+                    )
+                    if (direction != null) {
+                        slideOutHorizontally { fullWidth -> fullWidth * -direction }
+                    } else {
+                        ExitTransition.None
                     }
                 }
             AnimatedNavHost(
@@ -207,7 +242,13 @@ fun AppRoot(
                         navController = navController
                     )
                 }
-                composable(NavRoutes.SETTINGS) {
+                composable(
+                    route = NavRoutes.SETTINGS,
+                    enterTransition = settingsEnterTransition,
+                    exitTransition = settingsExitTransition,
+                    popEnterTransition = settingsEnterTransition,
+                    popExitTransition = settingsExitTransition
+                ) {
                     SettingsScreen(
                         viewModel = mainViewModel,
                         navController = navController,
