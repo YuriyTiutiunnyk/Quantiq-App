@@ -202,7 +202,7 @@ fun AppRoot(
                         targetState.destination.route
                     )
                     if (direction != null) {
-                        slideOutHorizontally { fullWidth -> fullWidth * direction }
+                        slideOutHorizontally { fullWidth -> fullWidth * -direction }
                     } else {
                         ExitTransition.None
                     }
