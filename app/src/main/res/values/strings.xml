@@ -29,6 +29,9 @@
     <string name="reset_all_confirm">Reset all</string>
     <string name="reset_all_subtitle">Reset every counter back to zero.</string>
     <string name="back">Back</string>
+    <string name="exit_app_title">Exit app?</string>
+    <string name="exit_app_body">Are you sure you want to close Quantiq?</string>
+    <string name="exit_app_confirm">Exit</string>
     <string name="edit">Edit</string>
     <string name="edit_item">Edit item</string>
     <string name="open_details">Open details</string>

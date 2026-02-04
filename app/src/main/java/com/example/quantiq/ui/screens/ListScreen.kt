@@ -33,6 +33,7 @@ import com.example.quantiq.ui.MainIntent
 import com.example.quantiq.ui.MainViewModel
 import com.example.quantiq.ui.components.design.CircularIconButton
 import com.example.quantiq.ui.navigation.NavRoutes
+import com.example.quantiq.ui.navigation.navigateToRootTab
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,12 +49,7 @@ fun ListScreen(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.app_name)) },
-                actions = {
-                    // Counter count badge
-                    Badge { Text(state.counters.size.toString()) }
-                    Spacer(modifier = Modifier.width(16.dp))
-                }
+                title = { Text(stringResource(R.string.app_name)) }
             )
         },
         floatingActionButton = {
@@ -80,21 +76,12 @@ fun ListScreen(
                     isActive = counter.id == state.activeItemId,
                     onSelect = {
                         viewModel.dispatch(MainIntent.SetActiveCounter(counter.id))
-                        navController.navigate(NavRoutes.ACTIVE) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
+                        navController.navigateToRootTab(NavRoutes.ACTIVE)
                     },
                     onDelete = { viewModel.dispatch(MainIntent.DeleteCounter(counter.id)) },
                     onEdit = {
                         viewModel.dispatch(MainIntent.SetActiveCounter(counter.id))
-                        navController.navigate(NavRoutes.ACTIVE) {
-                            launchSingleTop = true
-                            restoreState = true
-                        }
+                        navController.navigateToRootTab(NavRoutes.ACTIVE)
                         navController.navigate(NavRoutes.counterDetails(counter.id)) {
                             launchSingleTop = true
                         }
@@ -105,7 +92,7 @@ fun ListScreen(
             // Placeholder for locked item
             if (!state.isPro && state.counters.size >= 3) {
                 item {
-                    LockedItem(onClick = { navController.navigate(NavRoutes.SETTINGS) })
+                    LockedItem(onClick = { navController.navigateToRootTab(NavRoutes.SETTINGS) })
                 }
             }
         }

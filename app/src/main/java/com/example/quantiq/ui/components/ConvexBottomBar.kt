@@ -1,7 +1,6 @@
 package com.example.quantiq.ui.components
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -20,14 +19,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.quantiq.ui.components.design.CircularIconButton
@@ -51,7 +48,6 @@ fun ConvexBottomBar(
     val selectedColor = MaterialTheme.colorScheme.primary
     val unselectedColor = MaterialTheme.colorScheme.onSurfaceVariant
     val buttonContainerColor = MaterialTheme.colorScheme.surface
-    val labelStyle = MaterialTheme.typography.labelMedium
     val bottomInset = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
     Box(
@@ -86,7 +82,6 @@ fun ConvexBottomBar(
                     buttonContainerColor = buttonContainerColor,
                     shadowElevation = tokens.buttonShadowElevation,
                     tonalElevation = tokens.buttonTonalElevation,
-                    labelStyle = labelStyle,
                     onClick = { onNavigate(item.route) },
                     modifier = Modifier.weight(1f)
                 )
@@ -106,7 +101,6 @@ fun ConvexBottomBar(
                     buttonContainerColor = buttonContainerColor,
                     shadowElevation = tokens.buttonShadowElevation,
                     tonalElevation = tokens.buttonTonalElevation,
-                    labelStyle = labelStyle,
                     onClick = { onNavigate(item.route) },
                     modifier = Modifier.weight(1f)
                 )
@@ -189,27 +183,20 @@ private fun BottomBarButton(
     buttonContainerColor: Color,
     shadowElevation: Dp,
     tonalElevation: Dp,
-    labelStyle: TextStyle,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val contentColor = if (selected) selectedColor else unselectedColor
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+    CircularIconButton(
+        icon = icon,
+        contentDescription = label,
+        onClick = onClick,
+        size = buttonSize,
+        iconSize = iconSize,
+        containerColor = buttonContainerColor,
+        contentColor = contentColor,
+        shadowElevation = shadowElevation,
+        tonalElevation = tonalElevation,
         modifier = modifier
-    ) {
-        CircularIconButton(
-            icon = icon,
-            contentDescription = label,
-            onClick = onClick,
-            size = buttonSize,
-            iconSize = iconSize,
-            containerColor = buttonContainerColor,
-            contentColor = contentColor,
-            shadowElevation = shadowElevation,
-            tonalElevation = tonalElevation
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(text = label, color = contentColor, style = labelStyle)
-    }
+    )
 }
