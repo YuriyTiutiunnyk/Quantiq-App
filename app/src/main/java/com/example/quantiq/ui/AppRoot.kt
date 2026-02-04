@@ -145,76 +145,10 @@ fun AppRoot(
                 end = padding.calculateEndPadding(layoutDirection),
                 bottom = 0.dp
             )
-            val tabOrder = mapOf(
-                NavRoutes.LIST to 0,
-                NavRoutes.ACTIVE to 1,
-                NavRoutes.SETTINGS to 2
-            )
-            val horizontalDirection: (String?, String?) -> Int? = { fromRoute, toRoute ->
-                val fromIndex = tabOrder[fromRoute]
-                val toIndex = tabOrder[toRoute]
-                when {
-                    fromIndex != null && toIndex != null && fromIndex != toIndex ->
-                        if (toIndex > fromIndex) 1 else -1
-                    toRoute == NavRoutes.SETTINGS -> 1
-                    fromRoute == NavRoutes.SETTINGS -> -1
-                    else -> null
-                }
-            }
-            val slideInTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition =
-                {
-                    val fromIndex = tabOrder[initialState.destination.route]
-                    val toIndex = tabOrder[targetState.destination.route]
-                    if (fromIndex != null && toIndex != null && fromIndex != toIndex) {
-                        val direction = if (toIndex > fromIndex) 1 else -1
-                        slideInHorizontally { fullWidth -> fullWidth * direction } + fadeIn()
-                    } else {
-                        fadeIn()
-                    }
-                }
-            val slideOutTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition =
-                {
-                    val fromIndex = tabOrder[initialState.destination.route]
-                    val toIndex = tabOrder[targetState.destination.route]
-                    if (fromIndex != null && toIndex != null && fromIndex != toIndex) {
-                        val direction = if (toIndex > fromIndex) -1 else 1
-                        slideOutHorizontally { fullWidth -> fullWidth * direction } + fadeOut()
-                    } else {
-                        fadeOut()
-                    }
-                }
-            val settingsEnterTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition =
-                {
-                    val direction = horizontalDirection(
-                        initialState.destination.route,
-                        targetState.destination.route
-                    )
-                    if (direction != null) {
-                        slideInHorizontally { fullWidth -> fullWidth * direction }
-                    } else {
-                        EnterTransition.None
-                    }
-                }
-            val settingsExitTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition =
-                {
-                    val direction = horizontalDirection(
-                        initialState.destination.route,
-                        targetState.destination.route
-                    )
-                    if (direction != null) {
-                        slideOutHorizontally { fullWidth -> fullWidth * -direction }
-                    } else {
-                        ExitTransition.None
-                    }
-                }
             AnimatedNavHost(
                 navController = navController,
                 startDestination = NavRoutes.LIST,
-                modifier = androidx.compose.ui.Modifier.padding(contentPadding),
-                enterTransition = slideInTransition,
-                exitTransition = slideOutTransition,
-                popEnterTransition = slideInTransition,
-                popExitTransition = slideOutTransition
+                modifier = androidx.compose.ui.Modifier.padding(contentPadding)
             ) {
                 composable(NavRoutes.LIST) {
                     ListScreen(viewModel = mainViewModel, navController = navController)
@@ -242,13 +176,7 @@ fun AppRoot(
                         navController = navController
                     )
                 }
-                composable(
-                    route = NavRoutes.SETTINGS,
-                    enterTransition = settingsEnterTransition,
-                    exitTransition = settingsExitTransition,
-                    popEnterTransition = settingsEnterTransition,
-                    popExitTransition = settingsExitTransition
-                ) {
+                composable(route = NavRoutes.SETTINGS) {
                     SettingsScreen(
                         viewModel = mainViewModel,
                         navController = navController,
