@@ -17,6 +17,9 @@
     <string name="new_counter_default">Новий лічильник</string>
     <string name="reset">Скинути</string>
     <string name="back">Назад</string>
+    <string name="exit_app_title">Вийти з застосунку?</string>
+    <string name="exit_app_body">Ви впевнені, що хочете закрити Quantiq?</string>
+    <string name="exit_app_confirm">Вийти</string>
     <string name="edit">Редагувати</string>
     <string name="language">Мова</string>
     <string name="select_language">Вибрати мову</string>

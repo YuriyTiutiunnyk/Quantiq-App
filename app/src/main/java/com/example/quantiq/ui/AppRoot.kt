@@ -1,6 +1,8 @@
 package com.example.quantiq.ui
 
+import android.app.Activity
 import android.view.View
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -18,12 +20,19 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
@@ -39,6 +48,7 @@ import com.example.quantiq.ui.components.BottomBarItemPosition
 import com.example.quantiq.ui.components.ConvexBottomBar
 import com.example.quantiq.ui.navigation.NavArguments
 import com.example.quantiq.ui.navigation.NavRoutes
+import com.example.quantiq.ui.navigation.navigateToRootTab
 import com.example.quantiq.ui.screens.ActiveItemScreen
 import com.example.quantiq.ui.screens.DetailScreen
 import com.example.quantiq.ui.screens.ListScreen
@@ -86,6 +96,9 @@ fun AppRoot(
         val currentRoute = navBackStackEntry?.destination?.route
         val showBottomBar = currentRoute in activeTabs
         val defaultTitle = stringResource(R.string.default_item_title)
+        val context = LocalContext.current
+        val activity = context as? Activity
+        var showExitDialog by remember { mutableStateOf(false) }
 
         LaunchedEffect(initialNotificationItemId) {
             if (initialNotificationItemId != null) {
@@ -98,6 +111,33 @@ fun AppRoot(
 
         LaunchedEffect(defaultTitle) {
             mainViewModel.dispatch(MainIntent.InitializeDefaultCounter(defaultTitle))
+        }
+
+        BackHandler(enabled = showBottomBar) {
+            showExitDialog = true
+        }
+
+        if (showExitDialog) {
+            AlertDialog(
+                onDismissRequest = { showExitDialog = false },
+                title = { Text(stringResource(R.string.exit_app_title)) },
+                text = { Text(stringResource(R.string.exit_app_body)) },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showExitDialog = false
+                            activity?.finish()
+                        }
+                    ) {
+                        Text(stringResource(R.string.exit_app_confirm))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showExitDialog = false }) {
+                        Text(stringResource(R.string.cancel))
+                    }
+                }
+            )
         }
 
         Scaffold(
@@ -127,13 +167,7 @@ fun AppRoot(
                             )
                         ),
                         onNavigate = { route ->
-                            navController.navigate(route) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
+                            navController.navigateToRootTab(route)
                         }
                     )
                 }

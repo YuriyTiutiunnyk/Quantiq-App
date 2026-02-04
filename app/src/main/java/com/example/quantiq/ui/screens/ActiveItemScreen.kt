@@ -64,6 +64,7 @@ import com.example.quantiq.ui.MainIntent
 import com.example.quantiq.ui.MainViewModel
 import com.example.quantiq.ui.components.design.CircularIconButton
 import com.example.quantiq.ui.navigation.NavRoutes
+import com.example.quantiq.ui.navigation.navigateToRootTab
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -212,13 +213,7 @@ fun ActiveItemScreen(
                                 actionLabel = actionLabel
                             )
                             if (result == androidx.compose.material3.SnackbarResult.ActionPerformed) {
-                                navController.navigate(NavRoutes.SETTINGS) {
-                                    popUpTo(navController.graph.startDestinationId) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
+                                navController.navigateToRootTab(NavRoutes.SETTINGS)
                             }
                         }
                     }
