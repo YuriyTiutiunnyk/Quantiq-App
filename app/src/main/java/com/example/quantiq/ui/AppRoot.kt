@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
@@ -60,6 +61,7 @@ import com.example.quantiq.ui.settings.notifications.UpcomingScheduleViewModelFa
 /**
  * The root composable that wires navigation, ViewModels, and layout direction for the app.
  */
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppRoot(
     mainViewModelFactory: MainViewModelFactory,
