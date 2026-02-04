@@ -44,8 +44,6 @@ import com.example.quantiq.ui.navigation.NavArguments
 import com.example.quantiq.ui.navigation.NavRoutes
 import com.example.quantiq.ui.screens.ActiveItemScreen
 import com.example.quantiq.ui.screens.DetailScreen
-import com.example.quantiq.ui.screens.GuidelineDetailScreen
-import com.example.quantiq.ui.screens.GuidelinesScreen
 import com.example.quantiq.ui.screens.ListScreen
 import com.example.quantiq.ui.screens.SettingsScreen
 import com.example.quantiq.ui.settings.notifications.NotificationDetailsScreen
@@ -258,23 +256,6 @@ fun AppRoot(
                     UpcomingScheduleScreen(
                         navController = navController,
                         viewModel = upcomingViewModel
-                    )
-                }
-                composable(NavRoutes.GUIDELINES) {
-                    GuidelinesScreen(navController = navController)
-                }
-                composable(
-                    route = NavRoutes.GUIDELINE_DETAILS,
-                    arguments = listOf(
-                        navArgument(NavArguments.GUIDELINE_ID) { type = NavType.IntType }
-                    )
-                ) { backStackEntry ->
-                    val guidelineId = backStackEntry.arguments
-                        ?.getInt(NavArguments.GUIDELINE_ID)
-                        ?: 0
-                    GuidelineDetailScreen(
-                        categoryId = guidelineId,
-                        navController = navController
                     )
                 }
             }
